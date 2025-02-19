@@ -1,5 +1,4 @@
 import { Button } from "@chakra-ui/react"
-
 import { routes } from "./routes"
 
 export default function Navbar() {
