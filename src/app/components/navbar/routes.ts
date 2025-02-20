@@ -4,7 +4,15 @@ export const routes = [
     href: "/",
   },
   {
-    name: "Sobre Nosotros",
-    href: "#about",
+    name: "Nosotros",
+    href: "/nosotros",
+  },
+  {
+    name: "Tu Seguridad",
+    href: "/seguridad",
+  },
+  {
+    name: "Contáctanos",
+    href: "/contacto",
   },
 ];

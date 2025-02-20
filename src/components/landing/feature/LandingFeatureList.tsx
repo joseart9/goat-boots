@@ -5,7 +5,8 @@ import { GlowBg } from '@/components/shared/ui/glow-bg';
 export interface FeatureListItem {
   title: string;
   description: string;
-  icon: React.ReactNode;
+  img: string;
+  imgAlt: string;
 }
 
 /**
@@ -72,7 +73,7 @@ export const LandingFeatureList = ({
         )}
 
         {description ? (
-          <p className="mt-6 md:text-xl">{description}</p>
+          <p className="mt-6 md:text-xl leading-loose">{description}</p>
         ) : (
           descriptionComponent
         )}
@@ -83,7 +84,8 @@ export const LandingFeatureList = ({
               key={index}
               title={featureItem.title}
               description={featureItem.description}
-              icon={featureItem.icon}
+              img={featureItem.img}
+              imgAlt={featureItem.imgAlt}
               variant={variant}
             />
           ))}

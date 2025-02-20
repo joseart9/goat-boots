@@ -1,11 +1,14 @@
-import NavbarSection from "@/app/components/navbar";
+
 import HeroSection from "@/app/components/hero"
+import NormsSection from "@/app/components/norms";
+import FaqComponent from "@/app/components/faq";
 
 export default function Home() {
   return (
     <main>
-      <NavbarSection />
       <HeroSection />
+      <NormsSection />
+      <FaqComponent />
     </main>
   );
 }

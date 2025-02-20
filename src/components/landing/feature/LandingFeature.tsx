@@ -10,13 +10,15 @@ export const LandingFeature = ({
   className,
   title,
   description,
-  icon,
+  img,
+  imgAlt,
   variant = 'primary',
 }: {
   className?: string;
   title: string;
   description: string;
-  icon: React.ReactNode;
+  img: string;
+  imgAlt: string
   variant?: 'primary' | 'secondary';
 }) => {
   return (
@@ -25,16 +27,16 @@ export const LandingFeature = ({
         className={clsx(
           'flex items-center justify-center w-16 h-16 rounded-md',
           variant === 'primary'
-            ? 'bg-primary-100/30 border border-primary-100/70 dark:border-primary-900 dark:bg-primary-900/70 text-primary-500'
+            ? 'bg-primary-100/30 border border-primary-100/70 dark:border-primary-500 dark:bg-primary-500/70 text-primary-500'
             : 'bg-secondary-100/30 border border-secondary-100/70 dark:border-secondary-900 dark:bg-secondary-900/70 text-secondary-500',
         )}
         aria-describedby="icon"
       >
-        {icon}
+        <img src={img} alt={imgAlt} />
       </div>
 
       <h3 className="text-lg font-semibold">{title}</h3>
-      <p className="text-sm text-gray-800 dark:text-gray-200">{description}</p>
+      <p className="text-sm text-gray-800 dark:text-gray-200 leading-relaxed">{description}</p>
     </div>
   );
 };

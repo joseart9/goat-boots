@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "conthrax-sb";
+  src: url("/fonts/conthrax-sb.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @layer base {
   :root {
     --hard-shadow: 0px 29px 52px 0px rgba(0, 0, 0, 0.4),
@@ -144,4 +151,8 @@
   .container-ultrawide {
     @apply xl:max-w-7xl;
   }
+}
+
+body {
+  font-family: "conthrax-sb", sans-serif;
 }

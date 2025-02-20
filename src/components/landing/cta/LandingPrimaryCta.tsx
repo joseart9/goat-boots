@@ -1,7 +1,9 @@
+"use client";
 import clsx from 'clsx';
 import Image from '@/components/shared/Image';
 import { GlowBg } from '@/components/shared/ui/glow-bg';
 import { VideoPlayer } from '@/components/shared/VideoPlayer';
+import { motion } from 'framer-motion';
 
 const LandingPrimaryCtaContent = ({
   className,
@@ -31,21 +33,47 @@ const LandingPrimaryCtaContent = ({
         textPosition === 'center'
           ? 'items-center text-center'
           : 'justify-center',
-        className,
-      )}
-    >
+        className
+      )}>
       {leadingComponent}
 
       {title ? (
         <h1 className="text-4xl lg:text-5xl leading-tight font-semibold md:max-w-xl">
-          {title}
+          Botas Industriales y{' '}
+          <motion.span
+            className="relative inline-block"
+            // Si prefieres que se anime al cargar, usa animate directamente.
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2, ease: 'easeInOut' }}
+          // Si deseas que la animación se active con hover, comenta las props anteriores y usa:
+          // whileHover={{ pathLength: 1 }}
+          >
+            Calzado de Seguridad
+            <motion.svg
+              className="absolute left-0 right-0 bottom-0"
+              viewBox="0 0 100 10"
+              preserveAspectRatio="none"
+            >
+              <motion.path
+                d="M 1 1 Q 6 2 18 1 T 50 2"
+                fill="transparent"
+                stroke="#FFBE29"
+                strokeWidth="2"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={{ pathLength: 1, opacity: 1 }}
+                transition={{ duration: 0.7, ease: 'easeInOut' }}
+              />
+            </motion.svg>
+          </motion.span>
         </h1>
       ) : (
         titleComponent
       )}
 
       {description ? (
-        <p className="md:text-lg md:max-w-lg">{description}</p>
+        <p className="md:text-lg md:max-w-lg dark:text-white/75">{description}</p>
       ) : (
         descriptionComponent
       )}
@@ -105,12 +133,12 @@ export const LandingPrimaryImageCtaSection = ({
   imageAlt?: string;
   imagePosition?: 'left' | 'right' | 'center';
   imagePerspective?:
-    | 'none'
-    | 'left'
-    | 'right'
-    | 'bottom'
-    | 'bottom-lg'
-    | 'paper';
+  | 'none'
+  | 'left'
+  | 'right'
+  | 'bottom'
+  | 'bottom-lg'
+  | 'paper';
   imageShadow?: 'none' | 'soft' | 'hard';
   minHeight?: number;
   withBackground?: boolean;
@@ -203,9 +231,9 @@ export const LandingPrimaryImageCtaSection = ({
                   imagePerspective === 'right' && 'lg:perspective-right',
                   imagePerspective === 'bottom' && 'lg:perspective-bottom',
                   imagePerspective === 'bottom-lg' &&
-                    'lg:perspective-bottom-lg',
+                  'lg:perspective-bottom-lg',
                   imagePerspective === 'paper' &&
-                    'lg:ml-[7%] lg:perspective-paper',
+                  'lg:ml-[7%] lg:perspective-paper',
                   imagePerspective === 'none' ? 'my-4' : 'my-8',
                 )}
                 alt={imageAlt}
