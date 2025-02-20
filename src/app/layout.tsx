@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Provider } from "@/components/ui/provider"
 import NavbarSection from "@/app/components/navbar";
 
 export const metadata: Metadata = {
@@ -54,10 +53,8 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="es_ES">
       <body className="scroll-smooth">
-        <Provider>
-          <NavbarSection />
-          {children}
-        </Provider>
+        <NavbarSection />
+        {children}
       </body>
     </html >
   );
