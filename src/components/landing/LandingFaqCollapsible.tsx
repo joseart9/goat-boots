@@ -6,6 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/shared/ui/accordion';
+import { motion } from 'framer-motion';
 
 export interface FaqItem {
   question: string;
@@ -62,7 +63,7 @@ export const LandingFaqCollapsibleSection = ({
         </div>
       ) : null}
 
-      <div className={clsx(className, 'w-full p-6 container-narrow')}>
+      <div className={clsx(className, 'w-full p-6 container-wide')}>
         {title ? (
           <h2 className="text-3xl font-semibold leading-tight max-w-xs sm:max-w-none md:text-4xl lg:text-5xl fancyHeading">
             {title}
@@ -72,7 +73,7 @@ export const LandingFaqCollapsibleSection = ({
         )}
 
         {description ? (
-          <p className="mt-6 md:text-xl">{description}</p>
+          <p className="mt-6 md:text-xl text-secondary-300">{description}</p>
         ) : (
           descriptionComponent
         )}

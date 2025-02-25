@@ -51,7 +51,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning lang="es_ES">
+    <html suppressHydrationWarning lang="es_ES" className="bg-secondary-100/20 dark:bg-secondary-500 text-[#1A1A1A] dark:text-white">
       <body className="scroll-smooth">
         <NavbarSection />
         {children}

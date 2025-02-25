@@ -62,12 +62,13 @@ export const LandingProductFeature = ({
   // Hook de framer-motion para el scroll y transformación
   const { scrollY } = useScroll();
   // Mapea el scroll (0 a 300px) a un desplazamiento en Y (0 a -100px), ajusta según lo que necesites.
-  const y = useTransform(scrollY, [0, 400], [0, -110]);
+  const y = useTransform(scrollY, [0, 350], [-140, -220]);
+  const yMobile = useTransform(scrollY, [0, 500], [150, 90]);
 
   return (
     <section
       className={clsx(
-        'w-full flex flex-col justify-center items-center gap-8 py-12 lg:py-16',
+        'w-full h-[80vh] lg:h-[100vh] lg:grid grid-cols-12 p-6',
         withBackground && variant === 'primary'
           ? 'bg-primary-100/20 dark:bg-primary-900/10'
           : '',
@@ -80,146 +81,118 @@ export const LandingProductFeature = ({
         imagePerspective === 'paper' ? 'md:pb-24' : '',
         className,
       )}
-      style={{
-        // backgroundImage: `url('/GIO15.png')`,
-        // backgroundSize: 'cover',
-        height: `130vh`,
-      }}
     >
 
       {/* Fondo con efecto parallax */}
       <motion.div
-        className="absolute inset-0"
+        className="absolute inset-0 hidden md:block drop-shadow-xl h-[130vh]"
         style={{
           backgroundImage: `url('/GIO15.webp')`,
           backgroundSize: 'cover',
           backgroundPosition: 'top',
+          scale: 0.8,
           y: y,
           zIndex: -1,
         }}
       />
-      {imageSrc && withBackgroundGlow ? (
-        <div className="hidden lg:flex justify-center w-full h-full absolute pointer-events-none">
-          <GlowBg
-            className={clsx(
-              'w-full lg:w-1/2 h-auto z-0 dark:opacity-50',
-              imagePosition === 'center' ? 'top-5' : ' -top-1/3',
-              imagePerspective === 'paper' ? 'opacity-70' : 'opacity-100',
-            )}
-            variant={backgroundGlowVariant}
-          />
-        </div>
-      ) : null}
+      <motion.div
+        className="absolute inset-0 md:hidden"
+        style={{
+          backgroundImage: `url('/GIO15.webp')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'left 50%',
+          opacity: 0.4,
+          scale: 1.1,
+          y: yMobile,
+          zIndex: -1,
+        }}
+      />
+      <div className='col-span-6'>
+
+      </div>
 
       <div
         className={clsx(
-          'w-full p-6 flex flex-col items-center relative',
+          'w-full p-6 col-span-6',
           imagePosition === 'center'
             ? 'container-narrow'
-            : 'max-w-full container-wide grid lg:grid-cols-2',
+            : 'max-w-full container-wide',
           innerClassName,
         )}
         style={{
           minHeight,
         }}
       >
-        <div
-          className={clsx(
-            'flex flex-col gap-4',
-            imagePosition === 'left' && 'lg:col-start-2 lg:row-start-1',
-            textPosition === 'center'
-              ? 'md:max-w-lg items-center text-center'
-              : 'items-start',
-          )}
-        >
+        <div>
           {title ? (
-            <h1 className="text-4xl lg:text-5xl leading-tight font-semibold md:max-w-xl md:-mt-60 xl:-mt-96">
-              Botas Industriales y{' '}
-              <motion.span
-                className="relative inline-block"
-                // Si prefieres que se anime al cargar, usa animate directamente.
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 2, ease: 'easeInOut' }}
-              // Si deseas que la animación se active con hover, comenta las props anteriores y usa:
-              // whileHover={{ pathLength: 1 }}
-              >
-                Calzado de Seguridad
-                <motion.svg
-                  className="absolute left-0 right-0 bottom-0"
-                  viewBox="0 0 100 10"
-                  preserveAspectRatio="none"
+            <>
+              <h1 className="hidden lg:block text-3xl lg:text-5xl leading-tight font-semibold md:max-w-xl">
+                Botas Industriales y{' '}
+                <motion.span
+                  className="relative inline-block"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2, ease: 'easeInOut' }}
                 >
-                  <motion.path
-                    d="M 1 1 Q 6 2 18 1 T 50 2"
-                    fill="transparent"
-                    stroke="#FFBE29"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 1 }}
-                    transition={{ duration: 0.7, ease: 'easeInOut' }}
-                  />
-                </motion.svg>
-              </motion.span>
-            </h1>
+                  Calzado de Seguridad
+                  <motion.svg
+                    className="absolute left-0 right-0 bottom-0"
+                    viewBox="0 0 100 10"
+                    preserveAspectRatio="none"
+                  >
+                    <motion.path
+                      d="M 1 1 Q 6 2 18 1 T 50 2"
+                      fill="transparent"
+                      stroke="#FFBE29"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 0.7, ease: 'easeInOut' }}
+                    />
+                  </motion.svg>
+                </motion.span>
+              </h1>
+
+              <h1 className="lg:hidden text-3xl lg:text-5xl leading-tight font-semibold md:max-w-xl">
+                Botas Industriales y{' '}
+                <motion.span
+                  className="relative inline-block"
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2, ease: 'easeInOut' }}
+                >
+                  Calzado de Seguridad
+                  <motion.svg
+                    className="absolute left-0 right-0 bottom-1"
+                    viewBox="0 0 100 10"
+                    preserveAspectRatio="none"
+                  >
+                    <motion.path
+                      d="M 1 1 Q 1 3 2 2 T 20 1 Q 50 2 50 1"
+                      fill="transparent"
+                      stroke="#FFBE29"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ duration: 0.7, ease: 'easeInOut' }}
+                    />
+                  </motion.svg>
+                </motion.span>
+              </h1>
+            </>
           ) : (
             titleComponent
           )}
 
           {description ? (
-            <p className="mt-4 md:text-xl">{description}</p>
+            <p className="mt-4 md:text-xl absolute top-0">{description}</p>
           ) : (
             descriptionComponent
           )}
-
           {children}
         </div>
-
-        {imageSrc ? (
-          <>
-            {imagePosition === 'center' ? (
-              <section className="w-full mt-auto pt-4 md:pt-6">
-                <Image
-                  className={clsx(
-                    'w-full rounded-md overflow-hidden',
-                    imageShadow === 'soft' && 'shadow-md',
-                    imageShadow === 'hard' && 'hard-shadow',
-                  )}
-                  src={imageSrc}
-                  alt={imageAlt}
-                  width={minHeight + 75}
-                  height={minHeight + 75}
-                />
-              </section>
-            ) : null}
-
-            {imagePosition === 'left' || imagePosition === 'right' ? (
-              <Image
-                className={clsx(
-                  'relative w-full hidden md:block rounded-2xl ',
-                  zoomOnHover ? 'hover:scale-100 transition-all' : '',
-                  imageShadow === 'soft' && 'drop-shadow-md',
-                  imageShadow === 'hard' && 'drop-shadow-lg',
-                  imagePosition === 'left' && 'lg:-left-6',
-                  imagePosition === 'right' && 'lg:-right-6',
-                  imagePerspective === 'left' && 'lg:perspective-left',
-                  imagePerspective === 'right' && 'lg:perspective-right',
-                  imagePerspective === 'bottom' && 'lg:perspective-bottom',
-                  imagePerspective === 'bottom-lg' &&
-                  'lg:perspective-bottom-lg',
-                  imagePerspective === 'paper' &&
-                  'lg:perspective-paper hover:scale-90',
-                  imagePerspective === 'none' ? 'my-4' : 'my-8',
-                )}
-                alt={imageAlt}
-                src={imageSrc}
-                width={minHeight + 75}
-                height={minHeight + 75}
-              />
-            ) : null}
-          </>
-        ) : null}
       </div>
     </section>
   );

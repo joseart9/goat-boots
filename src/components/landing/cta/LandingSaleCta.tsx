@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { Button } from '@/components/shared/ui/button';
 import { GlowBg } from '@/components/shared/ui/glow-bg';
+import Link from 'next/link';
 
 /**
  * A component meant to be used in the landing page.
@@ -63,7 +64,7 @@ export const LandingSaleCtaSection = ({
         </div>
       ) : null}
 
-      <div className={clsx(className, 'w-full p-6 container-narrow')}>
+      <div className={clsx(className, 'w-full p-6 container-wide')}>
         {title ? (
           <h2 className="text-3xl font-semibold leading-tight max-w-xs sm:max-w-none md:text-4xl lg:text-5xl fancyHeading">
             {title}
@@ -73,36 +74,21 @@ export const LandingSaleCtaSection = ({
         )}
 
         {description ? (
-          <p className="mt-6 md:text-xl">{description}</p>
+          <p className="mt-6 md:text-xl text-secondary-300">{description}</p>
         ) : (
           descriptionComponent
         )}
 
         <div className="mt-6 flex flex-wrap gap-4 w-full items-center">
           {ctaLabel ? (
-            <Button size="xl" asChild variant={variant} className="shrink-0">
-              <a href={ctaHref} target="_blank" rel="noopener noreferrer">
-                {ctaLabel}
-              </a>
+            <Button size="xl" className="bg-primary-500 hover:scale-110 transition-all duration-300 shrink-0" asChild variant={variant} >
+              <Link href="/catalogo">Catálogo</Link>
             </Button>
           ) : null}
 
           {secondaryCtaLabel ? (
-            <Button
-              className="shrink-0"
-              size="xl"
-              asChild
-              variant={
-                variant === 'primary' ? 'outlinePrimary' : 'outlineSecondary'
-              }
-            >
-              <a
-                href={secondaryCtaHref}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {secondaryCtaLabel}
-              </a>
+            <Button className="mt-2 bg-primary-500 hover:scale-110 transition-all duration-300" asChild>
+              <Link href="/catalogo">Catálogo</Link>
             </Button>
           ) : null}
 

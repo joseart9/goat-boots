@@ -3,7 +3,7 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 import { colors } from "./src/data/config/colors";
 
 const config: Config = {
-  darkMode: "class",
+  darkMode: "media",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",

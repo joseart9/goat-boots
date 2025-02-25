@@ -41,7 +41,7 @@ export const LandingFeatureList = ({
   return (
     <section
       className={clsx(
-        'relative w-full flex justify-center items-center gap-8 py-12 lg:py-16 flex-col',
+        'relative w-full flex justify-center items-center gap-8 py-12 lg:py-16 flex-col bg-secondary-100/75 dark:bg-transparent',
         withBackground && variant === 'primary'
           ? 'bg-primary-100/20 dark:bg-primary-900/10'
           : '',
@@ -51,6 +51,13 @@ export const LandingFeatureList = ({
         withBackgroundGlow ? 'overflow-hidden' : '',
         className,
       )}
+      style={{
+        backgroundImage: "url(textura1.png)",
+        backgroundBlendMode: "overlay",
+        backgroundPosition: "center",
+        WebkitClipPath:
+          "polygon(0% 0%, 100% 0%, 100% 91.07%, 75% 91.07%, 75% 94.04%, 50% 94.04%, 50% 97.02%, 25% 97.02%, 25% 100%, 0% 100%)"
+      }}
     >
       {withBackgroundGlow ? (
         <div className="hidden lg:flex justify-center w-full h-full absolute -bottom-1/2">
@@ -73,12 +80,12 @@ export const LandingFeatureList = ({
         )}
 
         {description ? (
-          <p className="mt-6 md:text-xl leading-loose">{description}</p>
+          <p className="mt-6 md:text-xl leading-loose text-secondary-300">{description}</p>
         ) : (
           descriptionComponent
         )}
 
-        <div className="mt-12 flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-12">
+        <div className="mt-12 flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-12 mb-12">
           {featureItems.map((featureItem, index) => (
             <LandingFeature
               key={index}

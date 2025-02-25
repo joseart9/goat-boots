@@ -61,7 +61,7 @@ const LandingProductTourSection = React.forwardRef<
         </div>
       ) : null}
 
-      <div className={clsx(className, 'wide-container')}>
+      <div className={clsx(className, 'p-6 w-full container-wide')}>
         {title ? (
           <h2 className="text-3xl font-semibold leading-tight max-w-xs sm:max-w-none md:text-4xl lg:text-5xl fancyHeading">
             {title}
@@ -71,7 +71,7 @@ const LandingProductTourSection = React.forwardRef<
         )}
 
         {description ? (
-          <p className="mt-6 md:text-xl">{description}</p>
+          <p className="mt-6 md:text-xl max-w-5xl text-secondary-300">{description}</p>
         ) : (
           descriptionComponent
         )}

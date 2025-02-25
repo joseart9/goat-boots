@@ -1,4 +1,5 @@
 import { LandingFeatureList } from '@/components/landing/feature/LandingFeatureList';
+import { motion } from 'framer-motion';
 
 const featureItems = [
     {
@@ -26,14 +27,17 @@ const featureItems = [
 
 export default function NormsSection() {
     return (
-        <section id='certificaciones'>
+        <motion.section id='certificaciones'
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true, amount: 0.3 }}>
             <LandingFeatureList
-                withBackgroundGlow
                 variant="primary"
                 title="Calzado Industrial Certificado: Normas de Seguridad Internacional"
                 description="Confía en nuestro calzado certificado que cumple con las normativas NOM, OSHA y ASTM, diseñado para ofrecer máxima protección y durabilidad en el trabajo."
                 featureItems={featureItems}
             />
-        </section>
+        </motion.section>
     );
 }
