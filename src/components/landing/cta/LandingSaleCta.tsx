@@ -81,13 +81,13 @@ export const LandingSaleCtaSection = ({
 
         <div className="mt-6 flex flex-wrap gap-4 w-full items-center">
           {ctaLabel ? (
-            <Button size="xl" className="bg-primary-500 hover:scale-110 transition-all duration-300 shrink-0" asChild variant={variant} >
+            <Button size="xl" className="bg-primary-500 hover:scale-110 transition-all duration-300 shrink-0 text-white" asChild variant={variant} >
               <Link href="/catalogo">Catálogo</Link>
             </Button>
           ) : null}
 
           {secondaryCtaLabel ? (
-            <Button className="mt-2 bg-primary-500 hover:scale-110 transition-all duration-300" asChild>
+            <Button className="mt-2 bg-primary-500 hover:scale-110 transition-all duration-300 text-white" asChild>
               <Link href="/catalogo">Catálogo</Link>
             </Button>
           ) : null}

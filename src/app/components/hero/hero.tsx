@@ -11,11 +11,11 @@ export default function Hero() {
                 imageShadow='soft'
                 imagePosition='left'
                 descriptionComponent={
-                    <div className="mt-4 max-w-xl text-secondary-400 dark:text-secondary-100">
+                    <div className="mt-4 max-w-xl text-secondary-600 dark:text-secondary-100">
                         <p>
                             Calzado industrial de alta calidad, diseñado para ofrecer máxima protección y confort en trabajos pesados, ideales para entornos laborales exigentes.
                         </p>
-                        <Button className="mt-2 bg-primary-500 hover:scale-110 transition-all duration-300 text-secondary-500" asChild>
+                        <Button className="mt-2 bg-primary-500 hover:scale-110 transition-all duration-300 text-white" asChild>
                             <Link href="/catalogo">Catálogo</Link>
                         </Button>
                     </div>

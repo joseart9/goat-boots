@@ -13,13 +13,15 @@ export const LandingFeature = ({
   img,
   imgAlt,
   variant = 'primary',
+  icon,
 }: {
   className?: string;
   title: string;
   description: string;
-  img: string;
-  imgAlt: string
+  img?: string;
+  imgAlt?: string
   variant?: 'primary' | 'secondary';
+  icon?: React.ReactNode;
 }) => {
   return (
     <div className={clsx('flex flex-col gap-4 py-4', className)}>
@@ -32,6 +34,7 @@ export const LandingFeature = ({
         )}
         aria-describedby="icon"
       >
+        {icon}
         <img src={img} alt={imgAlt} />
       </div>
 

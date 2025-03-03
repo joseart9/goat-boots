@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import NavbarSection from "@/app/components/navbar";
+import FooterSection from "./components/footer";
 
 export const metadata: Metadata = {
   title: "GOAT Boots - Botas y Calzado Industrial de Alta Calidad en México",
@@ -55,6 +56,7 @@ export default function RootLayout({
       <body className="scroll-smooth">
         <NavbarSection />
         {children}
+        <FooterSection />
       </body>
     </html >
   );

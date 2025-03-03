@@ -1,12 +1,16 @@
+"use client";
 import { clsx } from 'clsx';
 import { LandingFeature } from '@/components/landing/feature/LandingFeature';
 import { GlowBg } from '@/components/shared/ui/glow-bg';
+import useDarkMode from '@/app/hooks/useDarkMode';
+import { useEffect, useState } from 'react';
 
 export interface FeatureListItem {
   title: string;
   description: string;
-  img: string;
-  imgAlt: string;
+  img?: string;
+  imgAlt?: string;
+  icon?: React.ReactNode;
 }
 
 /**
@@ -26,6 +30,7 @@ export const LandingFeatureList = ({
   withBackgroundGlow = false,
   variant = 'primary',
   backgroundGlowVariant = 'primary',
+  icon,
 }: {
   className?: string;
   title?: string | React.ReactNode;
@@ -37,11 +42,20 @@ export const LandingFeatureList = ({
   withBackgroundGlow?: boolean;
   variant?: 'primary' | 'secondary';
   backgroundGlowVariant?: 'primary' | 'secondary';
+  icon?: React.ReactNode;
 }) => {
+  const isDarkMode = useDarkMode();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  if (!mounted) {
+    return null;
+  }
   return (
     <section
       className={clsx(
-        'relative w-full flex justify-center items-center gap-8 py-12 lg:py-16 flex-col bg-secondary-100/75 dark:bg-transparent',
+        'relative w-full flex justify-center items-center gap-8 py-12 lg:py-16 flex-col',
         withBackground && variant === 'primary'
           ? 'bg-primary-100/20 dark:bg-primary-900/10'
           : '',
@@ -52,7 +66,7 @@ export const LandingFeatureList = ({
         className,
       )}
       style={{
-        backgroundImage: "url(textura1.png)",
+        backgroundImage: `${isDarkMode ? "url('/textura1.png')" : "url('/textura2.png')"}`,
         backgroundBlendMode: "overlay",
         backgroundPosition: "center",
         WebkitClipPath:
@@ -94,6 +108,7 @@ export const LandingFeatureList = ({
               img={featureItem.img}
               imgAlt={featureItem.imgAlt}
               variant={variant}
+              icon={icon}
             />
           ))}
         </div>
