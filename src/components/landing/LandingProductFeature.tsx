@@ -1,8 +1,7 @@
 "use client";
 import clsx from 'clsx';
-import Image from '@/components/shared/Image';
-import { GlowBg } from '@/components/shared/ui/glow-bg';
 import { motion, useScroll, useTransform } from 'framer-motion';
+import { LandingProductHuntAward } from '@/components/landing/social-proof/LandingProductHuntAward';
 
 /**
  * A component meant to be used in the landing page.
@@ -107,8 +106,8 @@ export const LandingProductFeature = ({
           zIndex: -1,
         }}
       />
-      <div className='col-span-6'>
-
+      <div className='col-span-6 text-white text-2xl w-full flex pl-6 justify-start lg:justify-end pt-10'>
+        <LandingProductHuntAward grayscale={true} title='Calzado de Excelencia' />
       </div>
 
       <div

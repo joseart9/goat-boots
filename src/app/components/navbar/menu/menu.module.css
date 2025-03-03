@@ -8,6 +8,7 @@
   padding-top: 100px;
   transform: translateX(-100%);
   will-change: transform;
+  z-index: 1000;
 }
 
 .button_menu {
@@ -24,4 +25,5 @@
   height: 50px;
   border-radius: 50%;
   padding: 10px;
+  z-index: 1000;
 }

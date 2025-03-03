@@ -25,7 +25,7 @@ export const LandingProductFeatureKeyPoints = ({
       {keyPoints.map((keyPoint, index) => {
         return (
           <div key={index} className="">
-            <dt className="inline font-semibold text-gray-900 dark:text-gray-100">
+            <dt className="inline font-semibold text-secondary-500 dark:text-secondary-100">
               <CheckIcon
                 className={clsx(
                   'h-5 w-5 inline -mt-0.5',
@@ -36,7 +36,7 @@ export const LandingProductFeatureKeyPoints = ({
               />{' '}
               {keyPoint.title}.
             </dt>{' '}
-            <dd className="inline">{keyPoint.description}</dd>
+            <dd className="inline text-secondary-300">{keyPoint.description}</dd>
           </div>
         );
       })}

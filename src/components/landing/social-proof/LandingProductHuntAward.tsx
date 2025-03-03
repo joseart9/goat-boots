@@ -99,16 +99,6 @@ export const LandingProductHuntAward = ({
           >
             {title}
           </span>
-          <span
-            className={clsx(
-              'font-bold text-current',
-              placeClassName,
-              size === 'default' && 'text-[16px]',
-              size === 'small' && 'text-[14px]',
-            )}
-          >
-            {subtitle || formattedPlace}
-          </span>
         </div>
 
         <svg

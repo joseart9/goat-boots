@@ -57,13 +57,13 @@ export default function FooterSection() {
                 </p>
                 <ul className="flex justify-center space-y-6 flex-col">
                     {routes.map((route, index) => (
-                        <li key={index} className="cursor-pointer transition-all duration-300 hover:scale-110">
+                        <li key={index} className="cursor-pointer transition-all duration-300 lg:hover:scale-110">
                             <Link href={route.href}>
                                 <p>{route.name}</p>
                             </Link>
                         </li>
                     ))}
-                    <li className='transition-all duration-300 hover:scale-110 cursor-pointer'>
+                    <li className='transition-all duration-300 lg:hover:scale-110 cursor-pointer'>
                         <Link href="/catalogo">
                             <p>Catálogo</p>
                         </Link>

@@ -26,7 +26,7 @@ export default function DeliverySection() {
 
                     <LandingProductTourTrigger value="feature-2">
                         <p className="text-xl font-bold">
-                            Envíos Internacionales a México
+                            Envíos Nacionales a México
                         </p>
                         <p>
                             Experimenta nuestro servicio de envíos confiable y eficiente, diseñado para alcanzar los principales destinos en México.
