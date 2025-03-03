@@ -44,6 +44,9 @@ export const metadata: Metadata = {
     site: "@tuUsuario", // Reemplaza con tu usuario de Twitter
     images: ["https://www.goatboots.mx/logoComplete.jpg"], // Reemplaza con la URL de tu imagen
   },
+  icons: {
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({
