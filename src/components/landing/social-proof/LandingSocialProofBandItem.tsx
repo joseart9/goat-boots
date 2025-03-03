@@ -45,7 +45,7 @@ export const LandingSocialProofBandItem = ({
 
       {customGraphic}
 
-      <span className="text-xs">{children}</span>
+      <span className="text-xs text-secondary-100">{children}</span>
     </div>
   );
 };

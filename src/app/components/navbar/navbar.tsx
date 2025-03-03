@@ -6,6 +6,7 @@ import Link from "next/link";
 import { MenuToggle } from "./menu/menu_toggle";
 import { useState, useEffect } from "react";
 import Menu from "./menu";
+import TopBarSection from "@/app/components/topbar";
 
 function useMenuAnimation(isOpen: boolean) {
     const [scope, animate] = useAnimate();
@@ -83,6 +84,7 @@ export default function Navbar() {
 
     return (
         <>
+            <TopBarSection />
             <header className="hidden lg:flex flex-row w-screen space-x-8 bg-[#FFBE29] items-center sticky top-0 z-50 py-4">
                 <div className="flex flex-row h-16 -mt-6">
                     <div className="bg-[#1A1A1A] flex min-w-80">

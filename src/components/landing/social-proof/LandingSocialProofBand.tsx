@@ -20,7 +20,7 @@ export const LandingSocialProofBand = ({
         'w-full py-2',
         invert
           ? 'bg-slate-700 dark:bg-slate-300'
-          : 'bg-slate-200 dark:bg-slate-900',
+          : 'bg-secondary-500 dark:bg-secondary-500',
         className,
       )}
     >
