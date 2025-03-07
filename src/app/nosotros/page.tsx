@@ -20,7 +20,7 @@ export default function Nosotros() {
                     <h2 className='relative z-0 font-bold text-primary-500/25'>
                         Nosotros
                     </h2>
-                    <h2 className='relative -top-11 lg:-top-[90px] left-2 z-10 font-bold text-primary-500'>
+                    <h2 className='relative -top-11 lg:-top-[90px] left-1 z-10 font-bold text-primary-500'>
                         Nosotros
                     </h2>
                 </div>
