@@ -15,7 +15,7 @@ export default function Nosotros() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
             className='relative w-full flex flex-col justify-center items-center gap-8 py-12 lg:py-16'>
-            <div className='flex items-start justify-start w-full px-4 container-wide lg:pl-9 text-5xl lg:text-8xl pb-10 lg:pb-24'>
+            <div className='flex items-start justify-start w-full px-4 container-wide lg:pl-2 text-5xl lg:text-8xl pb-10 lg:pb-24'>
                 <div className='absolute'>
                     <h2 className='relative z-0 font-bold text-primary-500/25'>
                         Nosotros

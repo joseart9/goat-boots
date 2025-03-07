@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import NavbarSection from "@/app/components/navbar";
 import FooterSection from "./components/footer";
+import BackToTopButton from "./components/backToTop";
 
 export const metadata: Metadata = {
   title: "GOAT Boots - Botas y Calzado Industrial de Alta Calidad en México",
@@ -18,6 +19,10 @@ export const metadata: Metadata = {
     "seguridad laboral",
     "GOAT Boots",
     "durabilidad",
+    "comodidad",
+    "calzado industrial en México",
+    "botas de trabajo en México",
+    "botas de seguridad en México",
   ],
   openGraph: {
     title: "GOAT Boots - Botas y Calzado Industrial de Alta Calidad en México",
@@ -55,10 +60,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning lang="es_ES" className="bg-secondary-100/20 dark:bg-secondary-500 text-[#1A1A1A] dark:text-white">
+    <html suppressHydrationWarning lang="es_ES" className="bg-secondary-100/20 dark:bg-secondary-500 text-secondary-500 dark:text-white">
       <body className="scroll-smooth">
         <NavbarSection />
         {children}
+        <BackToTopButton />
         <FooterSection />
       </body>
     </html >

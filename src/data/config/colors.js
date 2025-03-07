@@ -11,7 +11,7 @@ export const colors = {
     lighter: "#E8E8E8",
     light: "#757575",
     main: "#1A1A1A",
-    dark: "#161313",
+    dark: "#171515",
     darker: "#0F080A",
   },
 };

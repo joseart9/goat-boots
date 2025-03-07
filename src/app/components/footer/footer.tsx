@@ -43,7 +43,7 @@ export default function FooterSection() {
                 </p>
                 <ul className="flex justify-center space-y-6 flex-col">
                     {socials.map((social, index) => (
-                        <li key={index} className="cursor-pointer transition-all duration-300 hover:scale-110">
+                        <li key={index} className="cursor-pointer transition-all duration-300 lg:hover:scale-110">
                             <Link href={social.url}>
                                 <p>{social.name}</p>
                             </Link>
