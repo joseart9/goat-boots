@@ -18,8 +18,8 @@ export default async function Product({
     }
 
     return (
-        <section className="lg:pt-12 pt-4">
-            <ProductShowcase product={productData} />
+        <section className="lg:pt-12">
+            <ProductShowcase product={productData} category={categoria} />
         </section>
     )
 }

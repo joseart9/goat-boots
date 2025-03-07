@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function Catalogo() {
     return (
-        <motion.section className="pt-14 min-h-screen flex-grow p-4 gap-4 w-full container mx-auto flex flex-col items-center"
+        <motion.section className="lg:pt-14 min-h-screen flex-grow p-4 gap-4 w-full container mx-auto flex flex-col "
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.3 }}
@@ -14,6 +14,7 @@ export default function Catalogo() {
             <h2 className="text-2xl font-semibold leading-tight max-w-xs sm:max-w-none md:text-4xl lg:text-5xl fancyHeading text-center">
                 ¡Conoce nuestros productos!
             </h2>
+
 
             <h3 className="text-sm lg:text-2xl text-center w-full max-w-6xl text-secondary-400 mt-2">
                 Selecciona alguna categoría para ver más sobre nuestras increíbles opciones que tenemos para ti.

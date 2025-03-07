@@ -6,13 +6,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionItem } from "@heroui/react";
 import { FaWhatsapp } from "react-icons/fa";
 import Link from "next/link";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { useRouter } from "next/navigation"
 
 interface ProductShowcaseProps {
     product: Product;
+    category: string;
 }
 
-const ProductShowcase = ({ product }: ProductShowcaseProps) => {
+const ProductShowcase = ({ product, category }: ProductShowcaseProps) => {
     const [selectedImage, setSelectedImage] = useState(0);
+    const router = useRouter();
 
     const imageVariants = {
         initial: { opacity: 0 },
@@ -23,7 +27,7 @@ const ProductShowcase = ({ product }: ProductShowcaseProps) => {
     const itemClasses = {
         base: "w-full bg-white dark:bg-secondary-500",
         title: "font-normal text-medium text-secondary-500 dark:text-white",
-        trigger: "px-2 py-0 rounded-lg h-14 flex items-center",
+        trigger: "px-2 py-0 rounded-lg h-14 flex items-center data-[focus-visible=true]:z-0 data-[focus-visible=true]:outline-0 data-[focus-visible=true]:outline-none",
         indicator: "text-medium text-secondary-500 dark:text-white",
         content: "text-small text-secondary-400 leading-loose",
     };
@@ -34,6 +38,10 @@ const ProductShowcase = ({ product }: ProductShowcaseProps) => {
 
     return (
         <section className="lg:container lg:mx-auto flex flex-col min-h-dvh gap-y-4 p-4 lg:p-2">
+            <button className="relative top-0 flex items-center gap-2 text-secondary-500/50 dark:text-white/50 py-4 text-base capitalize" onClick={() => router.back()}>
+                <IoMdArrowRoundBack className="size-7" />
+                {category}
+            </button>
             <div className="flex flex-row justify-between items-center">
                 <h2 className="text-3xl lg:text-5xl font-bold">{product.name}</h2>
                 <Link href="google.com">

@@ -1,12 +1,11 @@
 import { clsx } from 'clsx';
 import { GlowBg } from '@/components/shared/ui/glow-bg';
 import {
-  Accordion,
   AccordionContent,
-  AccordionItem,
   AccordionTrigger,
 } from '@/components/shared/ui/accordion';
 import { motion } from 'framer-motion';
+import { Accordion, AccordionItem } from "@heroui/react";
 
 export interface FaqItem {
   question: string;
@@ -77,32 +76,36 @@ export const LandingFaqCollapsibleSection = ({
         ) : (
           descriptionComponent
         )}
-
-        <Accordion
-          type="single"
-          collapsible
-          className="w-full mt-12 relative z-10"
-        >
-          {faqItems.map((faqItem, index) => (
-            <AccordionItem
-              key={index}
-              value={`item-${index}`}
-              className={clsx(
-                withBackground && variant === 'primary'
-                  ? 'border-primary-500/10'
-                  : '',
-                withBackground && variant === 'secondary'
-                  ? 'border-secondary-500/10'
-                  : '',
-              )}
-            >
-              <AccordionTrigger className="text-left">
-                {faqItem.question}
-              </AccordionTrigger>
-              <AccordionContent>{faqItem.answer}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <div className='-mx-2'>
+          <Accordion
+            className="w-full mt-12 relative z-10"
+            itemClasses={{
+              base: "text-white",
+              title: "font-normal text-medium text-secondary-500 dark:text-white",
+              content: "text-small px-2 text-secondary-400 leading-loose",
+              trigger: "data-[focus-visible=true]:z-0 data-[focus-visible=true]:outline-0 data-[focus-visible=true]:outline-none"
+            }}
+          >
+            {faqItems.map((faqItem, index) => (
+              <AccordionItem
+                key={index}
+                value={`item-${index}`}
+                className={clsx(
+                  withBackground && variant === 'primary'
+                    ? 'border-primary-500/10'
+                    : '',
+                  withBackground && variant === 'secondary'
+                    ? 'border-secondary-500/10'
+                    : '',
+                )}
+                title={faqItem.question}
+                aria-label={faqItem.question}
+              >
+                {faqItem.answer}
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
       </div>
     </section>
   );
