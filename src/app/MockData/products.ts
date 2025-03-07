@@ -20,6 +20,27 @@ export const products: Product[] = [
     ],
     stock: 10,
     category: "Category 1",
+    corte:
+      "Cuero de ganado vacuno, en flor entera, acabado graso espesor 2-2.2 mm",
+    colores: [
+      {
+        id: "1",
+        name: "Negro",
+        hex: "#000",
+      },
+      {
+        id: "2",
+        name: "Cafe",
+        hex: "#964B00",
+      },
+    ],
+    suela:
+      "Piso de poliuretano compacto, resistente a solventes, cuña de poliuretano expanso para brindar mayor confort.",
+    plantilla: "Poliuretano COMFORT con tela antibacterial",
+    forro: "Textil con propiedades antimicoticas y de transpiración",
+    corrida: "22 al 30",
+    construccion: "Lock Stitcher",
+    casco: "Policarbonato",
   },
   {
     id: "2",

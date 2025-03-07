@@ -107,7 +107,7 @@ export const LandingProductFeature = ({
         }}
       />
       <div className='col-span-6 text-white text-2xl w-full flex pl-6 justify-start lg:justify-end pt-10'>
-        <LandingProductHuntAward grayscale={true} title='Calzado de Excelencia' />
+        <LandingProductHuntAward title='Calzado de Excelencia' />
       </div>
 
       <div

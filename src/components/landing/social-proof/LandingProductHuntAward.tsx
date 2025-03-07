@@ -44,11 +44,11 @@ export const LandingProductHuntAward = ({
     <div
       className={clsx(
         className,
-        'flex h-12 dark:invert',
-        !grayscale && place === 1 && 'text-yellow-500 dark:text-yellow-500',
-        !grayscale && place === 2 && 'text-gray-400 dark:text-gray-300',
-        !grayscale && place === 3 && 'text-amber-600 dark:text-amber-600',
-        grayscale || (placeIsNumber && place > 3) ? 'text-[#4B587C]' : '',
+        'flex h-12',
+        !grayscale && place === 1 && 'text-black dark:text-yellow-500',
+        !grayscale && place === 2 && 'text-black dark:text-yellow-500',
+        !grayscale && place === 3 && 'text-black dark:text-yellow-500',
+        grayscale || (placeIsNumber && place > 3) ? 'text-yellow-500' : 'text-yellow-500',
       )}
     >
       <div
@@ -91,7 +91,7 @@ export const LandingProductHuntAward = ({
         >
           <span
             className={clsx(
-              'font-bold text-current',
+              'font-bold text-secondary-500 dark:text-white',
               titleClassName,
               size === 'default' && 'text-[10px]',
               size === 'small' && 'text-[9px]',

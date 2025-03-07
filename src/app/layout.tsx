@@ -3,6 +3,7 @@ import "./globals.css";
 import NavbarSection from "@/app/components/navbar";
 import FooterSection from "./components/footer";
 import BackToTopButton from "./components/backToTop";
+import { Providers } from "@/app/providers";
 
 export const metadata: Metadata = {
   title: "GOAT Boots - Botas y Calzado Industrial de Alta Calidad en México",
@@ -62,10 +63,12 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="es_ES" className="bg-secondary-100/20 dark:bg-secondary-500 text-secondary-500 dark:text-white">
       <body className="scroll-smooth">
-        <NavbarSection />
-        {children}
-        <BackToTopButton />
-        <FooterSection />
+        <Providers>
+          <NavbarSection />
+          {children}
+          <BackToTopButton />
+          <FooterSection />
+        </Providers>
       </body>
     </html >
   );

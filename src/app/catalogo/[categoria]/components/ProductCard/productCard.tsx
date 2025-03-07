@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Product from "@/app/types/Product";
 import { AnimatePresence, motion } from 'framer-motion';
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 interface ProductCardProps {
     product: Product;
@@ -11,10 +11,11 @@ interface ProductCardProps {
 
 const ProductCard = ({ product }: ProductCardProps) => {
     const router = useRouter();
+    const pathname = usePathname();
     const [isHovering, setIsHovering] = useState(false);
 
     const handleCardPress = () => {
-        router.push(`/catalogo/${product.category}/${product.id}`);
+        router.push(`${pathname}/${product.id}`);
     };
 
     return (

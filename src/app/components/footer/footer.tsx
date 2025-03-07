@@ -71,7 +71,7 @@ export default function FooterSection() {
                 </ul>
             </section>
             <section className='col-span-3 mt-12'>
-                <p className='text-secondary-400 text-center mb-6 lg:mb-0'>
+                <p className='text-secondary-400 text-center mb-6 lg:mb-0 text-xs lg:text-lg'>
                     <a href="https://www.instagram.com/araf.innovations/">
                         Powered by Araf Innovations &copy; {date.getFullYear()}
                     </a>
