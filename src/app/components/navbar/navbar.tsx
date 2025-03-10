@@ -1,5 +1,5 @@
 "use client";
-import { routes } from "./routes";
+import { routes, adminRoutes } from "./routes";
 import { useRouter, usePathname } from "next/navigation";
 import { motion, useAnimate, stagger } from "framer-motion";
 import Link from "next/link";
@@ -79,93 +79,120 @@ export default function Navbar() {
         active: { scaleX: 1 },
     };
 
-    const scope = useMenuAnimation(isOpen);
-    // #1A1A1A
+    let scope
+    if (!adminRoutes.some(route => pathname === route.href)) {
+        scope = useMenuAnimation(isOpen);
+        // #1A1A1A
+    }
 
     return (
         <>
-            <TopBarSection />
-            <header className="hidden lg:flex flex-row w-screen space-x-8 bg-[#FFBE29] items-center sticky top-0 z-50 py-4">
-                <div className="flex flex-row h-16 -mt-6">
-                    <div className="bg-[#1A1A1A] flex min-w-80">
-                        <div className="relative top-16 px-4 bg-[#1A1A1A] w-full flex ">
-                            <img
-                                src="/logo3.png"
-                                alt="Logo GOAT Boots"
-                                className="h-20 w-auto cursor-pointer bg-[#1A1A1A] -mt-8 pb-3 "
-                                onClick={handleClick}
-                            />
-                        </div>
-                    </div>
-                    <div
-                        className="bg-[#1A1A1A] h-32 w-8 relative rounded-br-lg"
-                        style={{
-                            clipPath: "polygon(0 0, 100% 0%, 38% 100%, 0% 100%)"
-                        }}
-                    />
-                </div>
-
-                <nav className="flex flex-row justify-between w-full px-8">
-                    <div className="flex flex-row items-center w-full space-x-6">
-                        {routes.map((route, index) => {
+            {adminRoutes.some(route => pathname === route.href) ? (
+                <>
+                    <header className="hidden lg:flex flex-row w-screen space-x-8 bg-[#FFBE29] items-center sticky top-0 z-50 py-4 px-6">
+                        <h2 className="text-secondary-500 text-2xl">
+                            Admin
+                        </h2>
+                        {adminRoutes.map((route, index) => {
                             const isActive = pathname === route.href;
                             return (
-                                <Link
-                                    key={index}
-                                    className={`hover:scale-110 transition-all duration-300 text-white hover:text-[#1A1A1A] text-lg ${isActive ? "text-[#1A1A1A] scale-110" : ""
-                                        }`}
-                                    href={route.href}
-                                >
+                                <Link key={index} href={route.href}>
                                     <motion.span
-                                        className="relative inline-block"
-                                        initial="rest"
-                                        animate={isActive ? "active" : "rest"}
-                                        whileHover="hover"
+                                        className={`hover:scale-110 transition-all duration-300 text-white hover:text-[#1A1A1A] text-lg ${isActive ? "text-[#1A1A1A] scale-110" : ""
+                                            }`}
                                     >
-                                        <span className={`${isActive ? "text-[#1A1A1A] scale-110" : ""}`}>{route.name}</span>
-                                        <motion.div
-                                            variants={underlineVariants}
-                                            transition={{ duration: 0.3, ease: "easeInOut" }}
-                                            className={`absolute left-0 right-0 -bottom-1 h-0.5 ${isActive ? "bg-black scale-110" : "bg-current"}`}
-                                            style={{ transformOrigin: "center" }}
-                                        />
+                                        {route.name}
                                     </motion.span>
                                 </Link>
                             );
                         })}
-                    </div>
+                    </header>
+                </>
+            ) : (
+                <>
+                    <TopBarSection />
+                    <header className="hidden lg:flex flex-row w-screen space-x-8 bg-[#FFBE29] items-center sticky top-0 z-50 py-4">
+                        <div className="flex flex-row h-16 -mt-6">
+                            <div className="bg-[#1A1A1A] flex min-w-80">
+                                <div className="relative top-16 px-4 bg-[#1A1A1A] w-full flex ">
+                                    <img
+                                        src="/logo3.png"
+                                        alt="Logo GOAT Boots"
+                                        className="h-20 w-auto cursor-pointer bg-[#1A1A1A] -mt-8 pb-3 "
+                                        onClick={handleClick}
+                                    />
+                                </div>
+                            </div>
+                            <div
+                                className="bg-[#1A1A1A] h-32 w-8 relative rounded-br-lg"
+                                style={{
+                                    clipPath: "polygon(0 0, 100% 0%, 38% 100%, 0% 100%)"
+                                }}
+                            />
+                        </div>
 
-                    <div className="justify-end">
-                        <Link href="/catalogo">
-                            <button
-                                className="bg-[#1A1A1A] px-6 py-3 text-white hover:bg-[#1A1A1A]/85 text-lg hover:scale-110 transition-all duration-300 rounded-md">
-                                Catálogo
-                            </button>
-                        </Link>
-                    </div>
-                </nav>
-            </header >
+                        <nav className="flex flex-row justify-between w-full px-8">
+                            <div className="flex flex-row items-center w-full space-x-6">
+                                {routes.map((route, index) => {
+                                    const isActive = pathname === route.href;
+                                    return (
+                                        <Link
+                                            key={index}
+                                            className={`hover:scale-110 transition-all duration-300 text-white hover:text-[#1A1A1A] text-lg ${isActive ? "text-[#1A1A1A] scale-110" : ""
+                                                }`}
+                                            href={route.href}
+                                        >
+                                            <motion.span
+                                                className="relative inline-block"
+                                                initial="rest"
+                                                animate={isActive ? "active" : "rest"}
+                                                whileHover="hover"
+                                            >
+                                                <span className={`${isActive ? "text-[#1A1A1A] scale-110" : ""}`}>{route.name}</span>
+                                                <motion.div
+                                                    variants={underlineVariants}
+                                                    transition={{ duration: 0.3, ease: "easeInOut" }}
+                                                    className={`absolute left-0 right-0 -bottom-1 h-0.5 ${isActive ? "bg-black scale-110" : "bg-current"}`}
+                                                    style={{ transformOrigin: "center" }}
+                                                />
+                                            </motion.span>
+                                        </Link>
+                                    );
+                                })}
+                            </div>
 
-            <header ref={scope} className="flex lg:hidden flex-row w-screen justify-between bg-[#FFBE29] items-center sticky top-0 z-50 h-fit">
-                <div className="">
-                    <Menu toggle={() => setIsOpen(!isOpen)} />
-                    <MenuToggle toggle={() => setIsOpen(!isOpen)} />
-                </div>
-                <div className="flex flex-row">
-                    <div className="bg-[#1A1A1A] w-4" style={{
-                        clipPath: "polygon(0 0, 100% 0%, 100% 100%, 59% 100%)"
-                    }} />
-                    <div className="bg-[#1A1A1A] py-6 w-auto h-full flex flex-row">
-                        <img
-                            src="/logo3.png"
-                            alt="Logo GOAT Boots"
-                            className="h-14 w-auto px-2"
-                            onClick={handleClick}
-                        />
-                    </div>
-                </div>
+                            <div className="justify-end">
+                                <Link href="/catalogo">
+                                    <button
+                                        className="bg-[#1A1A1A] px-6 py-3 text-white hover:bg-[#1A1A1A]/85 text-lg hover:scale-110 transition-all duration-300 rounded-md">
+                                        Catálogo
+                                    </button>
+                                </Link>
+                            </div>
+                        </nav>
+                    </header >
 
-            </header>
+                    <header ref={scope} className="flex lg:hidden flex-row w-screen justify-between bg-[#FFBE29] items-center sticky top-0 z-50 h-fit">
+                        <div className="">
+                            <Menu toggle={() => setIsOpen(!isOpen)} />
+                            <MenuToggle toggle={() => setIsOpen(!isOpen)} />
+                        </div>
+                        <div className="flex flex-row">
+                            <div className="bg-[#1A1A1A] w-4" style={{
+                                clipPath: "polygon(0 0, 100% 0%, 100% 100%, 59% 100%)"
+                            }} />
+                            <div className="bg-[#1A1A1A] py-6 w-auto h-full flex flex-row">
+                                <img
+                                    src="/logo3.png"
+                                    alt="Logo GOAT Boots"
+                                    className="h-14 w-auto px-2"
+                                    onClick={handleClick}
+                                />
+                            </div>
+                        </div>
+                    </header>
+                </>
+            )}
         </>
     );
 }

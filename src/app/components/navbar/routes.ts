@@ -16,3 +16,22 @@ export const routes = [
     href: "/contacto",
   },
 ];
+
+export const adminRoutes = [
+  {
+    name: "Productos",
+    href: "/admin",
+  },
+  {
+    name: "Categorías",
+    href: "/admin/categorias",
+  },
+  {
+    name: "Pedidos",
+    href: "/admin/pedidos",
+  },
+  {
+    name: "Colores",
+    href: "/admin/colores",
+  },
+];
