@@ -13,7 +13,7 @@ export default function CatalogoCategoria() {
     return (
         <section className="lg:pt-12 flex flex-col lg:flex-row min-h-screen flex-grow p-4 gap-4">
             <Sidebar />
-            <button className="relative top-0 flex items-center gap-2 text-secondary-500/50 dark:text-white/50 py-4 text-base" onClick={() => router.back()}>
+            <button className="lg:hidden relative top-0 flex items-center gap-2 text-secondary-500/50 dark:text-white/50 py-4 text-base" onClick={() => router.back()}>
                 <IoMdArrowRoundBack className="size-7" />
                 Categorías
             </button>

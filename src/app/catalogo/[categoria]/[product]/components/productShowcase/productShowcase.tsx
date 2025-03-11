@@ -38,7 +38,7 @@ const ProductShowcase = ({ product, category }: ProductShowcaseProps) => {
 
     return (
         <section className="lg:container lg:mx-auto flex flex-col min-h-dvh gap-y-4 p-4 lg:p-2">
-            <button className="relative top-0 flex items-center gap-2 text-secondary-500/50 dark:text-white/50 py-4 text-base capitalize" onClick={() => router.back()}>
+            <button className="lg:hidden relative top-0 flex items-center gap-2 text-secondary-500/50 dark:text-white/50 py-4 text-base capitalize" onClick={() => router.back()}>
                 <IoMdArrowRoundBack className="size-7" />
                 {category}
             </button>
@@ -107,14 +107,23 @@ const ProductShowcase = ({ product, category }: ProductShowcaseProps) => {
                         <h3 className="text-xl lg:text-2xl font-bold">Colores</h3>
                         <div className="flex gap-2">
                             {product.colores &&
-                                product.colores.map((color, index) => (
-                                    <div
-                                        key={index}
-                                        className="w-8 h-8 rounded-full bg-primary-500"
-                                        style={{ backgroundColor: color.hex }}
-                                    />
-                                ))}
+                                product.colores.map((color, index) =>
+                                    Array.isArray(color.hex) ? (
+                                        <div
+                                            key={index}
+                                            className="w-8 h-8 rounded-full"
+                                            style={{ backgroundColor: color.hex[0] }}
+                                        />
+                                    ) : (
+                                        <div
+                                            key={index}
+                                            className="w-8 h-8 rounded-full"
+                                            style={{ backgroundColor: color.hex }}
+                                        />
+                                    )
+                                )}
                         </div>
+
                     </div>
 
                     <p className="text-sm lg:text-base text-secondary-400">
