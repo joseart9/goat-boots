@@ -86,19 +86,59 @@ const AnimatedBar = ({
   delay: number;
 }) => {
   return (
-    <div className="flex items-center gap-4 mb-4">
-      <div className="w-32 text-sm text-secondary-400">{label}</div>
-      <div className="flex-1 h-4 bg-white/5 rounded-full overflow-hidden">
+    <motion.div
+      initial={{ opacity: 0, x: -20 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay }}
+      className="group flex items-center gap-4 mb-4 relative"
+    >
+      <div className="w-32 text-sm text-secondary-400 group-hover:text-primary-500 transition-colors duration-300">
+        {label}
+      </div>
+      <div className="flex-1 h-5 bg-white/5 rounded-full overflow-hidden backdrop-blur-sm border border-white/10">
         <motion.div
           initial={{ width: 0 }}
           whileInView={{ width: `${value}%` }}
           viewport={{ once: true }}
           transition={{ duration: 1, delay, ease: "easeOut" }}
-          className="h-full bg-primary-500 rounded-full"
-        />
+          className={`h-full rounded-full relative overflow-hidden
+            ${value === 0 ? "bg-secondary-500/50" : "bg-primary-500"}
+          `}
+        >
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0"
+            animate={{
+              x: ["-100%", "100%"],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear",
+              delay: delay + 1,
+            }}
+          />
+        </motion.div>
       </div>
-      <div className="w-12 text-sm text-secondary-400">{value}%</div>
-    </div>
+      <motion.div
+        initial={{ opacity: 0, x: 20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: delay + 0.2 }}
+        className="w-12 text-sm font-medium text-secondary-400 group-hover:text-primary-500 transition-colors duration-300"
+      >
+        {value}%
+      </motion.div>
+      {/* Tooltip */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        whileHover={{ opacity: 1, scale: 1 }}
+        className="absolute left-1/2 -translate-x-1/2 -top-10 bg-primary-500 text-white px-3 py-1 rounded-lg text-sm pointer-events-none hidden group-hover:block"
+      >
+        {value === 0 ? "No disponible" : `${value}% de eficiencia`}
+        <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary-500 rotate-45" />
+      </motion.div>
+    </motion.div>
   );
 };
 
@@ -116,10 +156,27 @@ const CharacteristicsGraph = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay }}
-      className="w-full p-6 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10"
+      className="w-full p-8 bg-white/5 backdrop-blur-sm rounded-xl border border-white/10 hover:border-primary-500/50 transition-colors duration-300"
     >
-      <h3 className="text-xl font-semibold mb-6">{soleData.name}</h3>
-      <div className="space-y-2">
+      <motion.h3
+        initial={{ opacity: 0, y: -10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay }}
+        className="text-2xl font-semibold mb-8 text-center relative"
+      >
+        <span className="bg-clip-text text-transparent bg-primary-500">
+          {soleData.name}
+        </span>
+        <motion.div
+          className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 h-0.5 w-12 bg-gradient-to-r from-primary-500/0 via-primary-500 to-primary-500/0"
+          initial={{ width: 0 }}
+          whileInView={{ width: 48 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: delay + 0.2 }}
+        />
+      </motion.h3>
+      <div className="space-y-3">
         {Object.entries(soleData.stats).map(([key, value], index) => (
           <AnimatedBar
             key={key}
