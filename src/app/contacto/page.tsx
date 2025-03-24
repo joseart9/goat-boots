@@ -30,7 +30,7 @@ export default function Contacto() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-white to-gray-200 dark:from-secondary-500 dark:to-secondary-700">
+    <div className="min-h-screen relative overflow-hidden bg-gradient-to-br from-white to-gray-200 dark:from-secondary-500 dark:to-secondary-700 mt-24 lg:mt-0">
       {/* Decorative background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-500/10 rounded-full blur-3xl" />

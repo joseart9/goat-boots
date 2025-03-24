@@ -28,6 +28,10 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
     error: errorImages,
   } = useImages(productId);
 
+  console.log(product);
+
+  console.log(images);
+
   if (isLoading || isLoadingImages) {
     return <Spinner />;
   }
