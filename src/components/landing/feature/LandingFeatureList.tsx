@@ -1,9 +1,9 @@
 "use client";
-import { clsx } from 'clsx';
-import { LandingFeature } from '@/components/landing/feature/LandingFeature';
-import { GlowBg } from '@/components/shared/ui/glow-bg';
-import useDarkMode from '@/app/hooks/useDarkMode';
-import { useEffect, useState } from 'react';
+import { clsx } from "clsx";
+import { LandingFeature } from "@/components/landing/feature/LandingFeature";
+import { GlowBg } from "@/components/shared/ui/glow-bg";
+import useDarkMode from "@/app/hooks/useDarkMode";
+import { useEffect, useState } from "react";
 
 export interface FeatureListItem {
   title: string;
@@ -28,9 +28,10 @@ export const LandingFeatureList = ({
   featureItems,
   withBackground = false,
   withBackgroundGlow = false,
-  variant = 'primary',
-  backgroundGlowVariant = 'primary',
+  variant = "primary",
+  backgroundGlowVariant = "primary",
   icon,
+  textVariant,
 }: {
   className?: string;
   title?: string | React.ReactNode;
@@ -40,9 +41,10 @@ export const LandingFeatureList = ({
   featureItems: FeatureListItem[];
   withBackground?: boolean;
   withBackgroundGlow?: boolean;
-  variant?: 'primary' | 'secondary';
-  backgroundGlowVariant?: 'primary' | 'secondary';
+  variant?: "primary" | "secondary";
+  backgroundGlowVariant?: "primary" | "secondary";
   icon?: React.ReactNode;
+  textVariant?: string;
 }) => {
   const isDarkMode = useDarkMode();
   const [mounted, setMounted] = useState(false);
@@ -55,35 +57,37 @@ export const LandingFeatureList = ({
   return (
     <section
       className={clsx(
-        'relative w-full flex justify-center items-center gap-8 py-12 lg:py-16 flex-col',
-        withBackground && variant === 'primary'
-          ? 'bg-primary-100/20 dark:bg-primary-900/10'
-          : '',
-        withBackground && variant === 'secondary'
-          ? 'bg-secondary-100/20 dark:bg-secondary-900/10'
-          : '',
-        withBackgroundGlow ? 'overflow-hidden' : '',
-        className,
+        "relative w-full flex justify-center items-center gap-8 py-12 lg:py-16 flex-col",
+        withBackground && variant === "primary"
+          ? "bg-primary-100/20 dark:bg-primary-900/10"
+          : "",
+        withBackground && variant === "secondary"
+          ? "bg-secondary-100/20 dark:bg-secondary-900/10"
+          : "",
+        withBackgroundGlow ? "overflow-hidden" : "",
+        className
       )}
       style={{
-        backgroundImage: `${isDarkMode ? "url('/textura1.png')" : "url('/textura2.png')"}`,
+        backgroundImage: `${
+          isDarkMode ? "url('/textura1.png')" : "url('/textura2.png')"
+        }`,
         backgroundBlendMode: "overlay",
         backgroundPosition: "center",
         WebkitClipPath:
-          "polygon(0% 0%, 100% 0%, 100% 91.07%, 75% 91.07%, 75% 94.04%, 50% 94.04%, 50% 97.02%, 25% 97.02%, 25% 100%, 0% 100%)"
+          "polygon(0% 0%, 100% 0%, 100% 91.07%, 75% 91.07%, 75% 94.04%, 50% 94.04%, 50% 97.02%, 25% 97.02%, 25% 100%, 0% 100%)",
       }}
     >
       {withBackgroundGlow ? (
         <div className="hidden lg:flex justify-center w-full h-full absolute -bottom-1/2">
           <GlowBg
-            className={clsx('w-full lg:w-2/3 h-auto z-0')}
+            className={clsx("w-full lg:w-2/3 h-auto z-0")}
             variant={backgroundGlowVariant}
           />
         </div>
       ) : null}
 
       <div
-        className={clsx('w-full p-6 max-w-full container-wide relative z-10')}
+        className={clsx("w-full p-6 max-w-full container-wide relative z-10")}
       >
         {title ? (
           <h2 className="text-3xl font-semibold leading-tight max-w-xs sm:max-w-none md:text-4xl lg:text-5xl fancyHeading">
@@ -94,7 +98,9 @@ export const LandingFeatureList = ({
         )}
 
         {description ? (
-          <p className="mt-6 md:text-xl leading-loose text-secondary-300">{description}</p>
+          <p className="mt-6 md:text-xl leading-loose text-secondary-300">
+            {description}
+          </p>
         ) : (
           descriptionComponent
         )}
@@ -109,6 +115,7 @@ export const LandingFeatureList = ({
               imgAlt={featureItem.imgAlt}
               variant={variant}
               icon={icon}
+              textVariant={textVariant}
             />
           ))}
         </div>

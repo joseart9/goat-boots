@@ -20,7 +20,7 @@ export const routes = [
 export const adminRoutes = [
   {
     name: "Productos",
-    href: "/admin",
+    href: "/admin/productos",
   },
   {
     name: "Categorías",
