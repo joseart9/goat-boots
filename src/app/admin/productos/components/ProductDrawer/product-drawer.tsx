@@ -5,17 +5,23 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
+  Spinner,
 } from "@heroui/react";
 import Input from "@/app/components/ui/Input";
 import Select, { SelectItem } from "@/app/components/ui/Select";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useCategories from "@/app/hooks/useCategorias";
 import ImageUpload from "@/app/components/imgUpload";
+import useProduct from "@/app/hooks/use-product";
+import useImages from "@/app/hooks/use-images";
+import useCategoria from "@/app/hooks/use-categoria";
 
 interface ProductDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
+  isLoading: boolean;
+  productId?: string;
 }
 
 interface ProductFormData {
@@ -36,9 +42,13 @@ export function ProductDrawer({
   isOpen,
   onClose,
   onSubmit,
+  isLoading,
+  productId,
 }: ProductDrawerProps) {
   const { data: categories } = useCategories();
   const [images, setImages] = useState<string[]>([null as any]);
+  const { data: product } = useProduct(productId ?? undefined);
+  const { images: existingImages } = useImages(productId ?? undefined);
   const [formData, setFormData] = useState<ProductFormData>({
     name: "",
     description: "",
@@ -52,6 +62,29 @@ export function ProductDrawer({
     casco: "",
     images: [],
   });
+
+  const { data: category } = useCategoria(formData.categoryId);
+
+  useEffect(() => {
+    if (productId) {
+      setFormData({
+        name: product?.name ?? "",
+        description: product?.description ?? "",
+        categoryId: product?.category_id ?? "",
+        corte: product?.corte ?? "",
+        suela: product?.suela ?? "",
+        plantilla: product?.plantilla ?? "",
+        forro: product?.forro ?? "",
+        corrida: product?.corrida ?? "",
+        construccion: product?.construccion ?? "",
+        casco: product?.casco ?? "",
+        images:
+          existingImages
+            ?.map((image) => image.url)
+            .filter((url): url is string => url !== undefined) ?? [],
+      });
+    }
+  }, [productId]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -253,7 +286,13 @@ export function ProductDrawer({
               onClick={handleSubmit}
               className="text-white rounded-lg bg-primary-500 py-2 px-4"
             >
-              Guardar
+              {isLoading ? (
+                <>
+                  <Spinner /> Guardando...
+                </>
+              ) : (
+                "Guardar"
+              )}
             </button>
           </div>
         </DrawerFooter>

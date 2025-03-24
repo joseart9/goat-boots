@@ -10,6 +10,7 @@ import { createCategory } from "@/server/actions/create-category";
 export default function CategoriasPage() {
   const { data, loading, error } = useCategorias();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [rowId, setRowId] = useState("");
 
   if (error) {
     return <div>Error loading categories: {error.message}</div>;
@@ -53,7 +54,7 @@ export default function CategoriasPage() {
           Nueva Categoría
         </Button>
       </div>
-      <CategoryTable data={data} />
+      <CategoryTable data={data} setRowId={setRowId} />
       <CreateCategoryDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

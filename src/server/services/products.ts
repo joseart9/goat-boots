@@ -66,11 +66,13 @@ export async function getProduct(productId: string): Promise<Product | null> {
     SELECT * FROM products WHERE id = ${productId} LIMIT 1;
     `;
 
+    console.log(product);
+
     return {
       id: product[0].id,
       name: product[0].name,
       description: product[0].description,
-      category: product[0].categoria_name,
+      category_id: product[0].category_id,
       corte: product[0].corte,
       suela: product[0].suela,
       plantilla: product[0].plantilla,

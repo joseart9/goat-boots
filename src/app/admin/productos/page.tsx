@@ -1,7 +1,7 @@
 "use client";
 
 import { useDisclosure } from "@heroui/react";
-import CreateProductDrawer from "./components/CreateProductDrawer";
+import { ProductDrawer } from "./components/ProductDrawer";
 import useProducts from "@/app/hooks/useProducts";
 import ProductsTable from "./components/ProductsTable";
 import { useState } from "react";
@@ -12,12 +12,16 @@ import { createImage } from "@/server/actions/create-image";
 export default function AdminProducts() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data, error, loading } = useProducts();
+  const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [prodcutId, setProdcutId] = useState<string | undefined>(undefined);
 
   console.log(data, error, loading);
 
   const rows = data || [];
 
   const handleCreateProduct = async (data: any) => {
+    setIsLoading(true);
     console.log(data);
     const producto = {
       name: data.name,
@@ -33,7 +37,6 @@ export default function AdminProducts() {
     };
 
     const response = await createProduct(producto);
-    console.log("Producto creado", response);
 
     if (!response) {
       console.log("Error al crear el producto");
@@ -54,6 +57,10 @@ export default function AdminProducts() {
     imagesToUpload.forEach(async (image: any) => {
       await createImage(image);
     });
+
+    // Close the drawer
+    onClose();
+    setIsLoading(false);
   };
 
   if (loading) {
@@ -63,6 +70,8 @@ export default function AdminProducts() {
       </div>
     );
   }
+
+  console.log(prodcutId);
   return (
     <div className="min-h-screen px-4 w-full">
       <div className="flex w-full items-center justify-between bg-secondary-500 py-3 rounded-lg shadow-sm text-white gap-6">
@@ -85,12 +94,14 @@ export default function AdminProducts() {
         </div>
       </div>
       <div>
-        <ProductsTable rows={rows} />
+        <ProductsTable rows={rows} setRowId={setProdcutId} />
       </div>
-      <CreateProductDrawer
+      <ProductDrawer
         isOpen={isOpen}
         onClose={onClose}
         onSubmit={handleCreateProduct}
+        isLoading={isLoading}
+        productId={prodcutId}
       />
     </div>
   );
