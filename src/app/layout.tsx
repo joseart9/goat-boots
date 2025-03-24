@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     images: ["https://www.goatboots.mx/logoComplete.jpg"], // Reemplaza con la URL de tu imagen
   },
   icons: {
-    apple: '/apple-touch-icon.png',
+    apple: "/apple-touch-icon.png",
   },
 };
 
@@ -61,7 +61,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html suppressHydrationWarning lang="es_ES" className="bg-secondary-100/20 dark:bg-secondary-500 text-secondary-500 dark:text-white">
+    <html
+      suppressHydrationWarning
+      lang="es_ES"
+      className="bg-secondary-100/20 dark:bg-secondary-500 text-secondary-500 dark:text-white overflow-x-hidden"
+    >
       <body className="scroll-smooth">
         <Providers>
           <NavbarSection />
@@ -70,6 +74,6 @@ export default function RootLayout({
           <FooterSection />
         </Providers>
       </body>
-    </html >
+    </html>
   );
 }

@@ -1,3 +1,3 @@
-import CreateCategoryDrawer from "./category-drawer";
+import { CreateCategoryDrawer } from "./category-drawer";
 
 export default CreateCategoryDrawer;
