@@ -15,7 +15,7 @@ export default async function AdminLayout({
   }
 
   // Realizar la validación del token contra el backend
-  const response = await fetch(`${process.env.BACKEND_AUTH}/auth/validate`, {
+  const response = await fetch(`${process.env.BACKEND_URL}/auth/validate`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
