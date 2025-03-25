@@ -1,24 +1,33 @@
 "use client";
 
 import { useDisclosure } from "@heroui/react";
-import CreateProductDrawer from "./components/CreateProductDrawer";
+import { ProductDrawer } from "./components/ProductDrawer";
 import useProducts from "@/app/hooks/useProducts";
 import ProductsTable from "./components/ProductsTable";
 import { useState } from "react";
 import Product from "@/app/types/Product";
 import { createProduct } from "@/server/actions/create-product";
 import { createImage } from "@/server/actions/create-image";
+import useProduct from "@/app/hooks/use-product";
+import useImages from "@/app/hooks/use-images";
+import { updateProduct } from "@/server/actions/update-product";
 
 export default function AdminProducts() {
+  // All hooks must be at the top level, before any conditional returns
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { data, error, loading } = useProducts();
-
-  console.log(data, error, loading);
+  const [search, setSearch] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string>("");
+  const { data: selectedProduct } = useProduct(selectedProductId || "empty");
+  const { images, isLoading: imagesLoading } = useImages(
+    selectedProductId || "empty"
+  );
 
   const rows = data || [];
 
   const handleCreateProduct = async (data: any) => {
-    console.log(data);
+    setIsLoading(true);
     const producto = {
       name: data.name,
       description: data.description,
@@ -30,13 +39,12 @@ export default function AdminProducts() {
       corrida: data.corrida,
       construccion: data.construccion,
       casco: data.casco,
+      color_id: data.colores,
     };
 
     const response = await createProduct(producto);
-    console.log("Producto creado", response);
 
     if (!response) {
-      console.log("Error al crear el producto");
       return;
     }
 
@@ -54,8 +62,63 @@ export default function AdminProducts() {
     imagesToUpload.forEach(async (image: any) => {
       await createImage(image);
     });
+
+    // Close the drawer
+    onClose();
+    setIsLoading(false);
   };
 
+  const handleUpdateProduct = async (data: any) => {
+    setIsLoading(true);
+    const flatColores = data.colores.join(",");
+    const productToUpdate = {
+      id: selectedProductId,
+      name: data.name,
+      description: data.description,
+      category_id: data.categoryId,
+      corte: data.corte,
+      suela: data.suela,
+      plantilla: data.plantilla,
+      forro: data.forro,
+      corrida: data.corrida,
+      construccion: data.construccion,
+      casco: data.casco,
+      color_id: data.colores,
+    };
+    const response = await updateProduct(productToUpdate);
+    if (!response) {
+      ("Error al actualizar el producto");
+      return;
+    }
+
+    // Update images
+    const images = data.images;
+    const imagesToUpload = images.map((image: string) => {
+      return {
+        url: image,
+        product_id: selectedProductId,
+      };
+    });
+
+    imagesToUpload.forEach(async (image: any) => {
+      await createImage(image);
+    });
+
+    onClose();
+    setIsLoading(false);
+  };
+
+  const handleEditProduct = (productId: string) => {
+    setSelectedProductId(productId);
+    onOpen();
+  };
+
+  const handleCloseDrawer = () => {
+    setSelectedProductId("");
+    onClose();
+  };
+
+  // Conditional return after all hooks
   if (loading) {
     return (
       <div>
@@ -63,18 +126,18 @@ export default function AdminProducts() {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen px-4 w-full">
-      <div className="flex w-full items-center justify-between bg-secondary-500 py-3 rounded-lg shadow-sm text-white gap-6">
-        <div className="flex flex-row flex-auto overflow-x-scroll w-full gap-2">
-          <button className="py-2 px-4 rounded-lg bg-primary-500 hover:bg-primary-400 flex flex-shrink-0">
-            Todas las categorias
-          </button>
-        </div>
+      <div className="flex w-full items-center justify-between bg-transparent dark:bg-secondary-500 py-3 rounded-lg shadow-sm text-white gap-6">
+        <div className="flex flex-row flex-auto overflow-x-scroll w-full gap-2"></div>
         <div className="flex flex-row w-fit gap-2">
           <button
             className="bg-green-500 py-2 px-4 rounded-lg hover:bg-green-400"
-            onClick={onOpen}
+            onClick={() => {
+              setSelectedProductId("");
+              onOpen();
+            }}
           >
             Agregar
           </button>
@@ -85,12 +148,15 @@ export default function AdminProducts() {
         </div>
       </div>
       <div>
-        <ProductsTable rows={rows} />
+        <ProductsTable rows={rows} handleEditRow={handleEditProduct} />
       </div>
-      <CreateProductDrawer
+      <ProductDrawer
         isOpen={isOpen}
-        onClose={onClose}
-        onSubmit={handleCreateProduct}
+        onClose={handleCloseDrawer}
+        onSubmit={selectedProductId ? handleUpdateProduct : handleCreateProduct}
+        isLoading={isLoading || imagesLoading}
+        initialData={selectedProduct || undefined}
+        imagesFromDb={images || []}
       />
     </div>
   );

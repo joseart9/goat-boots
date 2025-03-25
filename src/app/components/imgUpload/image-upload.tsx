@@ -1,6 +1,7 @@
 import { CustomImg } from "@/app/types/CustomImg";
 import { Button, Image } from "@heroui/react";
 import { useState } from "react";
+import { deleteImage } from "@/server/actions/delete-image";
 
 interface ImageUploadProps {
   images: any[];
@@ -20,10 +21,7 @@ export default function ImageUpload({
   isSingleImage = false,
 }: ImageUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const displayImages =
-    imagesSaved && imagesSaved.length > 0 && imagesSaved[0] !== null
-      ? [...imagesSaved]
-      : imagesSaved;
+  const [isDeleting, setIsDeleting] = useState(false);
 
   async function uploadImage(file: File) {
     const formData = new FormData();
@@ -72,11 +70,11 @@ export default function ImageUpload({
             try {
               const uploadedImage = await uploadImage(newImages[0]);
               if (isSingleImage) {
-                setImages([newImages[0]]);
+                setImages([uploadedImage.data.url]);
               } else {
                 setImages((prevImages: any) => {
                   const updatedImages = [...prevImages];
-                  updatedImages[index] = newImages[0];
+                  updatedImages[index] = uploadedImage.data.url;
                   return updatedImages;
                 });
                 addNewUpload();
@@ -99,11 +97,19 @@ export default function ImageUpload({
     }
   }
 
-  function handleDelete(index: any, isImgSaved?: boolean) {
+  async function handleDelete(index: any, isImgSaved?: boolean) {
     if (isImgSaved) {
-      setImagesSaved((prevImages: any[]) =>
-        prevImages.filter((image) => image.id !== index)
-      );
+      try {
+        setIsDeleting(true);
+        await deleteImage(index);
+        setImagesSaved((prevImages: any[]) =>
+          prevImages.filter((image) => image.id !== index)
+        );
+      } catch (error) {
+        console.error("Error deleting image from database:", error);
+      } finally {
+        setIsDeleting(false);
+      }
     } else {
       if (isSingleImage) {
         setImages([null as any]);
@@ -147,87 +153,18 @@ export default function ImageUpload({
     </Button>
   );
 
-  if (imagesSaved) {
-    return (
-      <div className="flex flex-row md:flex-wrap min-w-full overflow-x-auto gap-5 md:gap-5 md:space-x-0 p-2 pr-5">
-        {images.map((image, index) => (
-          <div key={index} className="relative flex-shrink-0 items-center">
-            {image ? (
-              <Image
-                className="object-cover w-[200px] h-[200px]"
-                src={URL.createObjectURL(image)}
-                alt={`Preview ${index + 1}`}
-              />
-            ) : (
-              <UploadButton index={index} />
-            )}
-            {image && (
-              <button
-                onClick={() => handleDelete(index)}
-                className="absolute z-50 -top-2 -right-3 font-bold bg-[#fc0303] text-white rounded-full p-1"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6 p-[2px] text-[#fff]"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                  />
-                </svg>
-              </button>
-            )}
-          </div>
-        ))}
-        {displayImages?.map((image, index) => (
-          <div key={index} className="relative flex-shrink-0 items-center">
-            {image && (
-              <Image
-                className="object-cover w-[200px] h-[200px]"
-                src={image.img}
-                alt={`Preview ${index + 1}`}
-              />
-            )}
-            {image && (
-              <button
-                onClick={() => handleDelete(image.id, true)}
-                className="absolute z-50 -top-2 -right-3 font-bold bg-[#fc0303] text-white rounded-full p-1"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={1.5}
-                  stroke="currentColor"
-                  className="size-6 p-[2px] text-[#fff]"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                  />
-                </svg>
-              </button>
-            )}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-row md:flex-wrap min-w-full overflow-x-auto space-x-4 md:gap-5 md:space-x-0 p-2">
+    <div className="flex flex-row md:flex-wrap min-w-full overflow-x-auto gap-5 md:gap-5 md:space-x-0 p-2 pr-5">
+      {/* Render new images */}
       {images.map((image, index) => (
-        <div key={index} className="relative flex-shrink-0 items-center">
+        <div
+          key={`new-${index}`}
+          className="relative flex-shrink-0 items-center"
+        >
           {image ? (
-            <img
+            <Image
               className="object-cover w-[200px] h-[200px]"
-              src={URL.createObjectURL(image)}
+              src={image}
               alt={`Preview ${index + 1}`}
             />
           ) : (
@@ -236,7 +173,7 @@ export default function ImageUpload({
           {image && (
             <button
               onClick={() => handleDelete(index)}
-              className="absolute -top-2 -right-3 font-bold bg-red-500 text-white rounded-full p-1"
+              className="absolute z-10 -top-2 -right-3 font-bold bg-[#fc0303] text-white rounded-full p-1"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -244,7 +181,7 @@ export default function ImageUpload({
                 viewBox="0 0 24 24"
                 strokeWidth={1.5}
                 stroke="currentColor"
-                className="size-6 p-[2px]"
+                className="size-6 p-[2px] text-[#fff]"
               >
                 <path
                   strokeLinecap="round"
@@ -256,7 +193,44 @@ export default function ImageUpload({
           )}
         </div>
       ))}
-      {!isSingleImage && images.length === 0 && <UploadButton index={0} />}
+
+      {/* Render saved images */}
+      {imagesSaved?.map((image: any) => (
+        <div
+          key={`saved-${image.id}`}
+          className="relative flex-shrink-0 items-center"
+        >
+          <Image
+            className="object-cover w-[200px] h-[200px]"
+            src={image.url}
+            alt={`Saved image ${image.id}`}
+          />
+          <button
+            onClick={() => handleDelete(image.id, true)}
+            disabled={isDeleting}
+            className="absolute z-10 -top-2 -right-3 font-bold bg-[#fc0303] text-white rounded-full p-1"
+          >
+            {isDeleting ? (
+              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            ) : (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="size-6 p-[2px] text-[#fff]"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                />
+              </svg>
+            )}
+          </button>
+        </div>
+      ))}
     </div>
   );
 }

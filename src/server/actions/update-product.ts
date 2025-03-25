@@ -2,20 +2,21 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
-import CustomImage from "@/app/types/CustomImage";
+import Product from "@/app/types/Product";
 
-export async function createImage(image: CustomImage) {
+export async function updateProduct(product: Product) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
   try {
     const { data, error } = await supabase
-      .from("images")
-      .insert(image)
+      .from("products")
+      .update(product)
+      .eq("id", product.id)
       .select();
 
     if (error) {
-      console.error("Error al crear la imagen", error);
+      console.log("error", error);
     }
 
     return data;

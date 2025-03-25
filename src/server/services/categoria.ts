@@ -20,3 +20,21 @@ export async function getCategorias(): Promise<Categoria[]> {
     return [];
   }
 }
+
+export async function getCategoria(id: string): Promise<Categoria | null> {
+  try {
+    const categoria = await db`SELECT * FROM categorias WHERE id = ${id}`;
+    return {
+      id: categoria[0].id,
+      name: categoria[0].name,
+      description: categoria[0].description,
+      img: categoria[0].img,
+      href: categoria[0].href,
+      alt: categoria[0].alt,
+      created_at: categoria[0].created_at,
+    };
+  } catch (error) {
+    console.error("Error al obtener la categoria", error);
+    return null;
+  }
+}

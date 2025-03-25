@@ -1,13 +1,13 @@
 import Table from "@/app/components/ui/Table";
 import { columns } from "./columns";
-import Categoria from "@/app/types/Categoria";
+import Colors from "@/app/types/Colors";
 
-interface CategoryTableProps {
-  data: Categoria[];
+interface ColorsTableProps {
+  data: Colors[];
   handleEditRow: (id: string) => void;
 }
 
-export function CategoryTable({ data, handleEditRow }: CategoryTableProps) {
+export function ColorsTable({ data, handleEditRow }: ColorsTableProps) {
   return (
     <div className="rounded-md border">
       <Table columns={columns} rows={data} handleEditRow={handleEditRow} />

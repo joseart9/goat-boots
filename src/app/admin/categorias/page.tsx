@@ -10,6 +10,7 @@ import { createCategory } from "@/server/actions/create-category";
 export default function CategoriasPage() {
   const { data, loading, error } = useCategorias();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [rowId, setRowId] = useState("");
 
   if (error) {
     return <div>Error loading categories: {error.message}</div>;
@@ -38,8 +39,6 @@ export default function CategoriasPage() {
     }
   };
 
-  console.log(data);
-
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -53,7 +52,7 @@ export default function CategoriasPage() {
           Nueva Categoría
         </Button>
       </div>
-      <CategoryTable data={data} />
+      <CategoryTable data={data} handleEditRow={setRowId} />
       <CreateCategoryDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

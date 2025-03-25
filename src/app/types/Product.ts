@@ -9,6 +9,8 @@ export default interface Product {
   id?: string;
   stock?: number;
   category?: string;
+  category_id?: string;
+  color_id?: string;
 
   // Especificaciones
   corte?: string;
