@@ -40,7 +40,7 @@ export async function getProducts(categoryHref?: string): Promise<Product[]> {
           JOIN categorias c ON p.category_id = c.id;
         `;
 
-    console.log(products);
+    products;
     return products.map((product) => ({
       id: product.id,
       name: product.name,
@@ -66,7 +66,7 @@ export async function getProduct(productId: string): Promise<Product | null> {
     SELECT * FROM products WHERE id = ${productId} LIMIT 1;
     `;
 
-    console.log(product);
+    product;
 
     return {
       id: product[0].id,
@@ -80,6 +80,7 @@ export async function getProduct(productId: string): Promise<Product | null> {
       corrida: product[0].corrida,
       construccion: product[0].construccion,
       casco: product[0].casco,
+      color_id: product[0].color_id,
     };
   } catch (error) {
     console.error("Error al obtener el producto", error);

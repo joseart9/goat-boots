@@ -22,7 +22,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
     }
   };
 
-  console.log(images);
+  images;
 
   return (
     <motion.div

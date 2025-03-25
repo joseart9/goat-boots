@@ -4,7 +4,6 @@ import { Button } from "@/components/shared/ui/button";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { FaShieldAlt, FaTools, FaStar } from "react-icons/fa";
-import Image from "next/image";
 
 const FeatureCard = ({
   icon: Icon,

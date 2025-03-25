@@ -2,24 +2,24 @@
 
 import { createClient } from "@/utils/supabase/server";
 import { cookies } from "next/headers";
-import CustomImage from "@/app/types/CustomImage";
+import Colors from "@/app/types/Colors";
 
-export async function createImage(image: CustomImage) {
+export async function createColor(color: Colors) {
   const cookieStore = cookies();
   const supabase = createClient(cookieStore);
 
   try {
     const { data, error } = await supabase
-      .from("images")
-      .insert(image)
+      .from("colors")
+      .insert(color)
       .select();
 
     if (error) {
-      console.error("Error al crear la imagen", error);
+      console.error("Error al crear el color", error);
     }
 
     return data;
   } catch (error) {
-    console.error("Error al crear el producto", error);
+    console.error("Error al crear el color", error);
   }
 }

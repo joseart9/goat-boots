@@ -17,13 +17,13 @@ import { MdOutlineDelete } from "react-icons/md";
 interface TableProps {
   columns: any[];
   rows: any[];
-  setEditRowId: (id: string) => void;
+  handleEditRow: (id: string) => void;
 }
 
 export default function TableComponent({
   columns,
   rows,
-  setEditRowId,
+  handleEditRow,
 }: TableProps) {
   const renderCell = React.useCallback((row: any, columnKey: any) => {
     const cellValue = row[columnKey];
@@ -38,14 +38,9 @@ export default function TableComponent({
       case "actions":
         return (
           <div className="relative flex items-center gap-2">
-            <Tooltip content="Ver" className="text-black">
-              <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                <FaRegEye />
-              </span>
-            </Tooltip>
             <Tooltip content="Editar" className="text-black">
               <span
-                onClick={() => setEditRowId(row.id)}
+                onClick={() => handleEditRow(row.id)}
                 className="text-lg text-default-400 cursor-pointer active:opacity-50"
               >
                 <RiEdit2Line />

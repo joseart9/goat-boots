@@ -10,12 +10,12 @@ const statusColorMap = {
 
 interface ProductsTableProps {
   rows: any[];
-  setEditRowId: (id: string) => void;
+  handleEditRow: (id: string) => void;
 }
 
 export default function ProductsTable({
   rows,
-  setEditRowId,
+  handleEditRow,
 }: ProductsTableProps) {
-  return <Table columns={columns} rows={rows} setEditRowId={setEditRowId} />;
+  return <Table columns={columns} rows={rows} handleEditRow={handleEditRow} />;
 }

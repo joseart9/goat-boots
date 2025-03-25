@@ -10,7 +10,7 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ placeholder, className, error, asTextarea, ...props }, ref) => {
     const baseStyles = "rounded-md border-none text-secondary-500";
-    const textareaStyles = "min-h-[100px] resize-y";
+    const textareaStyles = "min-h-[100px] resize-y text-sm";
 
     if (asTextarea) {
       return (

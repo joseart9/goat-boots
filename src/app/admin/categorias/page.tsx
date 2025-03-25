@@ -39,8 +39,6 @@ export default function CategoriasPage() {
     }
   };
 
-  console.log(data);
-
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
@@ -54,7 +52,7 @@ export default function CategoriasPage() {
           Nueva Categoría
         </Button>
       </div>
-      <CategoryTable data={data} setRowId={setRowId} />
+      <CategoryTable data={data} handleEditRow={setRowId} />
       <CreateCategoryDrawer
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}

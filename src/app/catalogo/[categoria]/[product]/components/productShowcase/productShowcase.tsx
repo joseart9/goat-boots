@@ -1,6 +1,5 @@
 "use client";
 
-import Product from "@/app/types/Product";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Accordion, AccordionItem } from "@heroui/react";
@@ -11,6 +10,7 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@heroui/spinner";
 import useProduct from "@/app/hooks/use-product";
 import useImages from "@/app/hooks/use-images";
+import { useColor } from "@/app/hooks/use-color";
 
 interface ProductShowcaseProps {
   productId: string;
@@ -28,9 +28,11 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
     error: errorImages,
   } = useImages(productId);
 
-  console.log(product);
-
-  console.log(images);
+  const {
+    color,
+    loading: isLoadingColor,
+    error: errorColor,
+  } = useColor(product?.color_id || "");
 
   if (isLoading || isLoadingImages) {
     return <Spinner />;
@@ -111,8 +113,8 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                     src={images[selectedImage].url}
                     alt={product.name}
                     className="object-contain w-full h-full aspect-square"
-                    onLoadStart={() => console.log("loading")}
-                    onLoad={() => console.log("loaded")}
+                    onLoadStart={() => "loading"}
+                    onLoad={() => "loaded"}
                   />
                 </motion.div>
               </AnimatePresence>
@@ -136,19 +138,23 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
           <div className="flex flex-col gap-2">
             <h3 className="text-xl lg:text-2xl font-bold">Colores</h3>
             <div className="flex gap-2">
-              {product.colores &&
-                product.colores.map((color, index) =>
-                  Array.isArray(color.hex) ? (
+              {color &&
+                color.map((color, index) =>
+                  color.multicolor ? (
                     <div
                       key={index}
                       className="w-8 h-8 rounded-full"
-                      style={{ backgroundColor: color.hex[0] }}
+                      style={{
+                        background: `linear-gradient(45deg, ${
+                          JSON.parse(color.hex as string)[0]
+                        } 50%, ${JSON.parse(color.hex as string)[1]} 50%)`,
+                      }}
                     />
                   ) : (
                     <div
                       key={index}
                       className="w-8 h-8 rounded-full"
-                      style={{ backgroundColor: color.hex }}
+                      style={{ backgroundColor: color.hex as string }}
                     />
                   )
                 )}

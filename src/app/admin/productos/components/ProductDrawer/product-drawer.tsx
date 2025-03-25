@@ -12,30 +12,17 @@ import Select, { SelectItem } from "@/app/components/ui/Select";
 import { useEffect, useState } from "react";
 import useCategories from "@/app/hooks/useCategorias";
 import ImageUpload from "@/app/components/imgUpload";
-import useProduct from "@/app/hooks/use-product";
-import useImages from "@/app/hooks/use-images";
-import useCategoria from "@/app/hooks/use-categoria";
+import { useForm } from "react-hook-form";
+import Product from "@/app/types/Product";
+import { useColors } from "@/app/hooks/use-colors";
 
 interface ProductDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
   isLoading: boolean;
-  productId?: string;
-}
-
-interface ProductFormData {
-  name: string;
-  description: string;
-  categoryId: string;
-  corte: string;
-  suela: string;
-  plantilla: string;
-  forro: string;
-  corrida: string;
-  construccion: string;
-  casco: string;
-  images: string[];
+  initialData?: Product;
+  imagesFromDb: any[];
 }
 
 export function ProductDrawer({
@@ -43,92 +30,116 @@ export function ProductDrawer({
   onClose,
   onSubmit,
   isLoading,
-  productId,
+  initialData,
+  imagesFromDb,
 }: ProductDrawerProps) {
   const { data: categories } = useCategories();
   const [images, setImages] = useState<string[]>([null as any]);
-  const { data: product } = useProduct(productId ?? undefined);
-  const { images: existingImages } = useImages(productId ?? undefined);
-  const [formData, setFormData] = useState<ProductFormData>({
-    name: "",
-    description: "",
-    categoryId: "",
-    corte: "",
-    suela: "",
-    plantilla: "",
-    forro: "",
-    corrida: "",
-    construccion: "",
-    casco: "",
-    images: [],
+  const [savedImages, setSavedImages] = useState<any[]>([]);
+  const { colors, loading, error } = useColors();
+
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: "",
+      description: "",
+      categoryId: "",
+      corte: "",
+      colores: [] as string[],
+      suela: "",
+      plantilla: "",
+      forro: "",
+      corrida: "",
+      construccion: "",
+      casco: "",
+    },
   });
 
-  const { data: category } = useCategoria(formData.categoryId);
+  const categoryId = watch("categoryId");
+  const colores = watch("colores");
 
   useEffect(() => {
-    if (productId) {
-      setFormData({
-        name: product?.name ?? "",
-        description: product?.description ?? "",
-        categoryId: product?.category_id ?? "",
-        corte: product?.corte ?? "",
-        suela: product?.suela ?? "",
-        plantilla: product?.plantilla ?? "",
-        forro: product?.forro ?? "",
-        corrida: product?.corrida ?? "",
-        construccion: product?.construccion ?? "",
-        casco: product?.casco ?? "",
-        images:
-          existingImages
-            ?.map((image) => image.url)
-            .filter((url): url is string => url !== undefined) ?? [],
+    if (initialData) {
+      // Set form values from initialData
+      Object.keys(initialData).forEach((key) => {
+        if (key !== "images" && key !== "color_id") {
+          setValue(key as any, initialData[key as keyof Product]);
+        }
       });
+
+      // set colores - handle both string and array cases
+      if (initialData.color_id) {
+        const colorIds = Array.isArray(initialData.color_id)
+          ? initialData.color_id
+          : [initialData.color_id];
+        setValue("colores", colorIds);
+      }
+
+      // Set images if they exist
+      if (imagesFromDb && imagesFromDb.length > 0) {
+        setSavedImages(imagesFromDb);
+      }
+
+      // Set categoryId
+      setValue("categoryId", initialData.category_id || "");
+    } else {
+      // Reset form when creating new product
+      reset();
+      setSavedImages([]);
     }
-  }, [productId]);
+  }, [initialData, setValue, reset, imagesFromDb]);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = () => {
+  const handleFormSubmit = (data: any) => {
+    const formData = {
+      ...data,
+      images: images.filter((img) => img !== null),
+      savedImages: savedImages,
+    };
     onSubmit(formData);
   };
 
-  const handleUploadComplete = (images: string) => {
-    formData.images.push(images);
+  const handleUploadComplete = (url: string) => {
+    setImages((prev) => [...prev.filter((img) => img !== null), url]);
   };
+
+  // Log all data for debugging
+  //  ("Images:", images);
+  //  ("Saved images:", savedImages);
+  //  ("Initial data:", initialData);
+  //  ("Category ID:", categoryId);
 
   return (
     <Drawer
       isOpen={isOpen}
       onClose={onClose}
       placement="right"
-      size="lg"
+      size="3xl"
       hideCloseButton
       className="bg-secondary-500"
     >
       <DrawerContent>
         <DrawerHeader className="border-b">
-          <h2 className="text-xl font-semibold">Nuevo Producto</h2>
+          <h2 className="text-xl font-semibold">
+            {initialData ? "Editar Producto" : "Nuevo Producto"}
+          </h2>
         </DrawerHeader>
         <DrawerBody>
-          <form className="space-y-4">
+          <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-white mb-1">
                 Nombre
               </label>
               <Input
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full"
                 placeholder="Ingrese el nombre del producto"
+                {...register("name", { required: "El nombre es requerido" })}
+                error={errors.name?.message as string}
+                className="w-full bg-white/10 text-white border-white/20"
               />
             </div>
 
@@ -137,22 +148,15 @@ export function ProductDrawer({
                 Descripción
               </label>
               <Input
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                className="w-full"
                 placeholder="Ingrese la descripción del producto"
                 asTextarea
+                {...register("description", {
+                  required: "La descripción es requerida",
+                })}
+                error={errors.description?.message as string}
+                className="w-full bg-white/10 text-white border-white/20"
               />
             </div>
-
-            <h3 className="text-sm font-medium text-white mb-1">Imagenes</h3>
-            <ImageUpload
-              images={images}
-              setImages={setImages}
-              isSingleImage={false}
-              onUploadComplete={handleUploadComplete}
-            />
 
             <div>
               <label className="block text-sm font-medium text-white mb-1">
@@ -160,10 +164,9 @@ export function ProductDrawer({
               </label>
               <Select
                 placeholder="Seleccione una categoría"
-                value={formData.categoryId}
-                onChange={(value) =>
-                  setFormData((prev) => ({ ...prev, categoryId: value }))
-                }
+                value={categoryId}
+                onChange={(value) => setValue("categoryId", value as string)}
+                error={errors.categoryId?.message as string}
                 className="w-full"
               >
                 {categories?.map((category) => (
@@ -176,100 +179,140 @@ export function ProductDrawer({
 
             <div>
               <label className="block text-sm font-medium text-white mb-1">
-                Corte
+                Imágenes
               </label>
-              <Input
-                name="corte"
-                value={formData.corte}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Ingrese el corte"
-                asTextarea
+              <ImageUpload
+                images={images}
+                setImages={setImages}
+                imagesSaved={savedImages}
+                setImagesSaved={setSavedImages}
+                onUploadComplete={handleUploadComplete}
               />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-white mb-1">
-                Suela
-              </label>
-              <Input
-                name="suela"
-                value={formData.suela}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Ingrese la suela"
-                asTextarea
-              />
-            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Corte
+                </label>
+                <Input
+                  placeholder="Ingrese el corte"
+                  asTextarea
+                  {...register("corte")}
+                  className="w-full bg-white/10 text-white border-white/20"
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-white mb-1">
-                Plantilla
-              </label>
-              <Input
-                name="plantilla"
-                value={formData.plantilla}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Ingrese la plantilla"
-                asTextarea
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Colores
+                </label>
+                <Select
+                  placeholder="Seleccione un color"
+                  value={watch("colores") || []}
+                  onChange={(value) =>
+                    setValue("colores", Array.isArray(value) ? value : [])
+                  }
+                  error={errors.colores?.message as string}
+                  className="w-full"
+                  multiple
+                >
+                  {colors?.map((color) => {
+                    const hexColors = color.multicolor
+                      ? JSON.parse(color.hex as string)
+                      : [color.hex];
 
-            <div>
-              <label className="block text-sm font-medium text-white mb-1">
-                Forro
-              </label>
-              <Input
-                name="forro"
-                value={formData.forro}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Ingrese el forro"
-                asTextarea
-              />
-            </div>
+                    return (
+                      <SelectItem key={color.id} value={color.id || ""}>
+                        <div className="flex items-center gap-2">
+                          <div className="flex gap-1">
+                            {hexColors.map((hex: string, index: number) => (
+                              <div
+                                key={index}
+                                className="w-4 h-4 rounded-full"
+                                style={{ backgroundColor: hex }}
+                              />
+                            ))}
+                          </div>
+                          {color.name}
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
+                </Select>
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-white mb-1">
-                Corrida
-              </label>
-              <Input
-                name="corrida"
-                value={formData.corrida}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Ingrese la corrida"
-                asTextarea
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Suela
+                </label>
+                <Input
+                  placeholder="Ingrese la suela"
+                  asTextarea
+                  {...register("suela")}
+                  className="w-full bg-white/10 text-white border-white/20"
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-white mb-1">
-                Construcción
-              </label>
-              <Input
-                name="construccion"
-                value={formData.construccion}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Ingrese la construcción"
-                asTextarea
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Plantilla
+                </label>
+                <Input
+                  placeholder="Ingrese la plantilla"
+                  asTextarea
+                  {...register("plantilla")}
+                  className="w-full bg-white/10 text-white border-white/20"
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-white mb-1">
-                Casco
-              </label>
-              <Input
-                name="casco"
-                value={formData.casco}
-                onChange={handleChange}
-                className="w-full"
-                placeholder="Ingrese el casco"
-                asTextarea
-              />
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Forro
+                </label>
+                <Input
+                  placeholder="Ingrese el forro"
+                  asTextarea
+                  {...register("forro")}
+                  className="w-full bg-white/10 text-white border-white/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Corrida
+                </label>
+                <Input
+                  placeholder="Ingrese la corrida"
+                  asTextarea
+                  {...register("corrida")}
+                  className="w-full bg-white/10 text-white border-white/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Construcción
+                </label>
+                <Input
+                  placeholder="Ingrese la construcción"
+                  asTextarea
+                  {...register("construccion")}
+                  className="w-full bg-white/10 text-white border-white/20"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-white mb-1">
+                  Casco
+                </label>
+                <Input
+                  placeholder="Ingrese el casco"
+                  asTextarea
+                  {...register("casco")}
+                  className="w-full bg-white/10 text-white border-white/20"
+                />
+              </div>
             </div>
           </form>
         </DrawerBody>
@@ -283,12 +326,12 @@ export function ProductDrawer({
               Cancelar
             </Button>
             <button
-              onClick={handleSubmit}
-              className="text-white rounded-lg bg-primary-500 py-2 px-4"
+              onClick={handleSubmit(handleFormSubmit)}
+              className="text-white rounded-lg bg-primary-500 py-2 px-4 w-52"
             >
               {isLoading ? (
                 <>
-                  <Spinner /> Guardando...
+                  <Spinner size="sm" /> Guardando...
                 </>
               ) : (
                 "Guardar"

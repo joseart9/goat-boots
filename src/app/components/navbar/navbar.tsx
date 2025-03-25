@@ -88,25 +88,7 @@ export default function Navbar() {
   return (
     <div className="mb-12 lg:mb-0">
       {adminRoutes.some((route) => pathname === route.href) ? (
-        <>
-          <header className="hidden lg:flex flex-row w-screen space-x-8 bg-[#FFBE29] items-center sticky top-0 z-50 py-4 px-6">
-            <h2 className="text-secondary-500 text-2xl">Admin</h2>
-            {adminRoutes.map((route, index) => {
-              const isActive = pathname === route.href;
-              return (
-                <Link key={index} href={route.href}>
-                  <motion.span
-                    className={`hover:scale-110 transition-all duration-300 text-white hover:text-[#1A1A1A] text-lg ${
-                      isActive ? "text-[#1A1A1A] scale-110" : ""
-                    }`}
-                  >
-                    {route.name}
-                  </motion.span>
-                </Link>
-              );
-            })}
-          </header>
-        </>
+        <></>
       ) : (
         <>
           <TopBarSection />
