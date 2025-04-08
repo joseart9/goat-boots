@@ -39,8 +39,6 @@ export async function getProducts(categoryHref?: string): Promise<Product[]> {
           FROM products p
           JOIN categorias c ON p.category_id = c.id;
         `;
-
-    products;
     return products.map((product) => ({
       id: product.id,
       name: product.name,
@@ -66,7 +64,7 @@ export async function getProduct(productId: string): Promise<Product | null> {
     SELECT * FROM products WHERE id = ${productId} LIMIT 1;
     `;
 
-    product;
+    const colors = await getProductColors(productId);
 
     return {
       id: product[0].id,
@@ -80,10 +78,46 @@ export async function getProduct(productId: string): Promise<Product | null> {
       corrida: product[0].corrida,
       construccion: product[0].construccion,
       casco: product[0].casco,
-      color_id: product[0].color_id,
+      colors: colors,
     };
   } catch (error) {
     console.error("Error al obtener el producto", error);
     return null;
+  }
+}
+
+export async function getProductColors(productId: string): Promise<string[]> {
+  try {
+    const colors = await db`
+      SELECT color_id FROM "product-colors" WHERE product_id = ${productId}
+    `;
+
+    return colors.map((color) => color.color_id);
+  } catch (error) {
+    console.error("Error al obtener los colores del producto", error);
+    return [];
+  }
+}
+
+export async function updateProductColors(productId: string, colors: string[]) {
+  try {
+    // First delete existing colors for this product
+    await db`DELETE FROM "product-colors" WHERE product_id = ${Number(
+      productId
+    )}`;
+
+    // Then insert new colors if there are any
+    if (colors.length > 0) {
+      // Convert color IDs to numbers
+      const colorIds = colors.map((color) => Number(color));
+
+      await db`
+        INSERT INTO "product-colors" (product_id, color_id)
+        SELECT ${Number(productId)}, unnest(${colorIds}::bigint[])
+      `;
+    }
+  } catch (error) {
+    console.error("Error al actualizar los colores del producto", error);
+    throw error;
   }
 }

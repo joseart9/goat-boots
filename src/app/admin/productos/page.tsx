@@ -11,6 +11,7 @@ import { createImage } from "@/server/actions/create-image";
 import useProduct from "@/app/hooks/use-product";
 import useImages from "@/app/hooks/use-images";
 import { updateProduct } from "@/server/actions/update-product";
+import { updateProductColors } from "@/server/services/products";
 
 export default function AdminProducts() {
   // All hooks must be at the top level, before any conditional returns
@@ -18,11 +19,13 @@ export default function AdminProducts() {
   const { data, error, loading } = useProducts();
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState<string>("");
-  const { data: selectedProduct } = useProduct(selectedProductId || "empty");
-  const { images, isLoading: imagesLoading } = useImages(
-    selectedProductId || "empty"
-  );
+  const [selectedProductId, setSelectedProductId] = useState<
+    string | undefined
+  >(undefined);
+
+  // Always call these hooks, they handle their own enabled/disabled state
+  const { data: selectedProduct } = useProduct(selectedProductId);
+  const { images, isLoading: imagesLoading } = useImages(selectedProductId);
 
   const rows = data || [];
 
@@ -39,7 +42,6 @@ export default function AdminProducts() {
       corrida: data.corrida,
       construccion: data.construccion,
       casco: data.casco,
-      color_id: data.colores,
     };
 
     const response = await createProduct(producto);
@@ -63,6 +65,11 @@ export default function AdminProducts() {
       await createImage(image);
     });
 
+    // Update colors
+    const colors = data.colores;
+    const colorIds = colors.map((color: string) => Number(color));
+    await updateProductColors(productId, colorIds);
+
     // Close the drawer
     onClose();
     setIsLoading(false);
@@ -83,7 +90,6 @@ export default function AdminProducts() {
       corrida: data.corrida,
       construccion: data.construccion,
       casco: data.casco,
-      color_id: data.colores,
     };
     const response = await updateProduct(productToUpdate);
     if (!response) {
@@ -114,7 +120,7 @@ export default function AdminProducts() {
   };
 
   const handleCloseDrawer = () => {
-    setSelectedProductId("");
+    setSelectedProductId(undefined);
     onClose();
   };
 
@@ -128,14 +134,18 @@ export default function AdminProducts() {
   }
 
   return (
-    <div className="min-h-screen px-4 w-full">
-      <div className="flex w-full items-center justify-between bg-transparent dark:bg-secondary-500 py-3 rounded-lg shadow-sm text-white gap-6">
-        <div className="flex flex-row flex-auto overflow-x-scroll w-full gap-2"></div>
+    <div className="p-6 min-h-screen">
+      <div className="flex w-full items-center justify-between bg-transparent dark:bg-secondary-500 py-3 rounded-lg shadow-sm text-white gap-6 mb-4">
+        <div className="flex flex-row flex-auto overflow-x-scroll w-full gap-2">
+          <h1 className="text-2xl font-bold text-secondary-500 dark:text-white">
+            Productos
+          </h1>
+        </div>
         <div className="flex flex-row w-fit gap-2">
           <button
             className="bg-green-500 py-2 px-4 rounded-lg hover:bg-green-400"
             onClick={() => {
-              setSelectedProductId("");
+              setSelectedProductId(undefined);
               onOpen();
             }}
           >

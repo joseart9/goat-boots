@@ -10,7 +10,7 @@ export default function Catalogo() {
 
   return (
     <motion.section
-      className="min-h-screen flex-grow py-16 px-4 w-full container mx-auto relative"
+      className="min-h-screen flex-grow py-16 px-4 w-full container mx-auto relative mt-20 md:mt-0"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}

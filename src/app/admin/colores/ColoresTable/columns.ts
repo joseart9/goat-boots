@@ -1,6 +1,6 @@
 export const columns = [
   { name: "Nombre", uid: "name" },
-  { name: "Descripción", uid: "description" },
-  { name: "Enlace", uid: "href" },
-  { name: "Texto alternativo", uid: "alt" },
+  { name: "Hex", uid: "hex" },
+  { name: "Multicolor", uid: "multicolor" },
+  { name: "Acciones", uid: "actions" },
 ];

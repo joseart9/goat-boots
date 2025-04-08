@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@heroui/spinner";
 import useProduct from "@/app/hooks/use-product";
 import useImages from "@/app/hooks/use-images";
-import { useColor } from "@/app/hooks/use-color";
+import { useColors } from "@/app/hooks/use-colors";
 
 interface ProductShowcaseProps {
   productId: string;
@@ -19,6 +19,7 @@ interface ProductShowcaseProps {
 
 const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
   const [selectedImage, setSelectedImage] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
 
   const { data: product, isLoading, error } = useProduct(productId);
@@ -27,38 +28,53 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
     isLoading: isLoadingImages,
     error: errorImages,
   } = useImages(productId);
+  const { colors, loading: isLoadingColors, error: errorColors } = useColors();
 
-  const {
-    color,
-    loading: isLoadingColor,
-    error: errorColor,
-  } = useColor(product?.color_id || "");
+  const productColors =
+    colors?.filter((color) =>
+      product?.colors?.includes(color.id?.toString() || "")
+    ) || [];
 
-  if (isLoading || isLoadingImages) {
-    return <Spinner />;
+  if (isLoading || isLoadingImages || isLoadingColors) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
-  if (error || errorImages) {
-    return <div>Error: {error?.message || errorImages?.message}</div>;
+  if (error || errorImages || errorColors) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-red-500 text-lg">
+          Error:{" "}
+          {error?.message || errorImages?.message || errorColors?.message}
+        </div>
+      </div>
+    );
   }
 
   if (!product || !images) {
-    return <Spinner />;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Spinner size="lg" />
+      </div>
+    );
   }
 
   const imageVariants = {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
+    initial: { opacity: 0, scale: 0.95 },
+    animate: { opacity: 1, scale: 1 },
+    exit: { opacity: 0, scale: 0.95 },
   };
 
   const itemClasses = {
-    base: "w-full bg-white dark:bg-secondary-500",
-    title: "font-normal text-medium text-secondary-500 dark:text-white",
+    base: "w-full bg-white/10 dark:bg-secondary-500/10 backdrop-blur-sm rounded-lg",
+    title: "font-medium text-lg text-secondary-500 dark:text-white",
     trigger:
-      "px-2 py-0 rounded-lg h-14 flex items-center data-[focus-visible=true]:z-0 data-[focus-visible=true]:outline-0 data-[focus-visible=true]:outline-none",
+      "px-4 py-3 rounded-lg h-14 flex items-center hover:bg-white/5 transition-colors",
     indicator: "text-medium text-secondary-500 dark:text-white",
-    content: "text-small text-secondary-400 leading-loose",
+    content: "text-small text-secondary-400 leading-loose px-4 pb-4",
   };
 
   const handleThumbnailClick = (index: number) => {
@@ -66,84 +82,146 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
   };
 
   return (
-    <section className="lg:container lg:mx-auto flex flex-col min-h-dvh gap-y-4 p-4 lg:p-2">
-      <button
-        className="lg:hidden relative top-0 flex items-center gap-2 text-secondary-500/50 dark:text-white/50 py-4 text-base capitalize"
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="lg:container lg:mx-auto flex flex-col min-h-dvh gap-y-8 p-4 lg:p-8 overflow-hidden"
+    >
+      <motion.button
+        initial={{ x: -20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="lg:hidden relative top-0 flex items-center gap-2 text-secondary-500/50 dark:text-white/50 py-4 text-base capitalize hover:text-secondary-500 dark:hover:text-white transition-colors"
         onClick={() => router.back()}
       >
         <IoMdArrowRoundBack className="size-7" />
         {category}
-      </button>
-      <div className="flex flex-row justify-between items-center">
-        <h2 className="text-3xl lg:text-5xl font-bold">{product.name}</h2>
-        <Link href="google.com">
-          <FaWhatsapp className="size-10 text-primary-500 lg:hover:scale-110 transition-transform duration-300" />
-        </Link>
-      </div>
+      </motion.button>
 
-      <div className="flex flex-col lg:grid grid-cols-12">
-        <div className="flex flex-col lg:flex-row lg:h-[800px] col-span-7 gap-1">
-          {/* Menú de selección de imágenes (thumbnails) */}
-          <div className="hidden lg:flex flex-col overflow-y-auto gap-1 h-full">
-            {images &&
-              images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image.url}
-                  alt={product.name}
-                  className="object-contain w-24 h-24 cursor-pointer lg:hover:opacity-50 lg:hover:scale-110 transition-transform duration-300 aspect-square p-1"
-                  onClick={() => handleThumbnailClick(index)}
-                />
-              ))}
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.3 }}
+        className="flex flex-row justify-between items-center"
+      >
+        <h2 className="text-4xl lg:text-6xl font-bold  text-secondary-500 dark:text-primary-500">
+          {product.name}
+        </h2>
+        <Link
+          href="https://wa.me/1234567890"
+          target="_blank"
+          className="relative group"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
+        >
+          <motion.div
+            animate={{
+              scale: isHovered ? 1.1 : 1,
+              rotate: isHovered ? 10 : 0,
+            }}
+            transition={{ type: "spring", stiffness: 300 }}
+          >
+            <FaWhatsapp className="size-12 text-primary-500" />
+          </motion.div>
+          <motion.span
+            initial={{ opacity: 0, y: 10 }}
+            animate={{
+              opacity: isHovered ? 1 : 0,
+              y: isHovered ? 0 : 10,
+            }}
+            className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs bg-primary-500 text-white px-2 py-1 rounded whitespace-nowrap"
+          >
+            Contactar por WhatsApp
+          </motion.span>
+        </Link>
+      </motion.div>
+
+      <div className="flex flex-col lg:grid grid-cols-12 gap-8">
+        <motion.div
+          initial={{ x: -20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="flex flex-col lg:flex-row lg:h-[800px] col-span-7 gap-4"
+        >
+          <div className="hidden lg:flex flex-col overflow-y-auto gap-2 h-full custom-scrollbar p-1">
+            {images.map((image, index) => (
+              <motion.img
+                key={index}
+                src={image.url}
+                alt={product.name}
+                className={`object-cover w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 p-1 ${
+                  selectedImage === index
+                    ? "ring-2 ring-primary-500 scale-105"
+                    : "hover:opacity-80 hover:scale-105"
+                }`}
+                onClick={() => handleThumbnailClick(index)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              />
+            ))}
           </div>
-          {/* Contenedor de la imagen grande */}
-          <div className=" flex overflow-hidden aspect-square ">
-            {images && (
-              <AnimatePresence mode="wait">
+
+          <div className="relative flex overflow-hidden aspect-square rounded-2xl dark:bg-white/5 backdrop-blur-sm bg-secondary-500/5">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={images[selectedImage].url}
+                variants={imageVariants}
+                initial="initial"
+                animate="animate"
+                exit="exit"
+                transition={{ duration: 0.3 }}
+                className="w-full h-full"
+              >
+                <img
+                  src={images[selectedImage].url}
+                  alt={product.name}
+                  className="object-contain w-full h-full"
+                />
+              </motion.div>
+            </AnimatePresence>
+          </div>
+
+          <div className="flex lg:hidden overflow-x-auto gap-2 custom-scrollbar">
+            {images.map((image, index) => (
+              <motion.img
+                key={index}
+                src={image.url}
+                alt={product.name}
+                className={`object-cover w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 ${
+                  selectedImage === index
+                    ? "ring-2 ring-primary-500 scale-105"
+                    : "hover:opacity-80 hover:scale-105"
+                }`}
+                onClick={() => handleThumbnailClick(index)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              />
+            ))}
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ x: 20, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="flex flex-col gap-6 p-6 col-span-5 dark:bg-white/5 backdrop-blur-sm rounded-2xl bg-secondary-500/5"
+        >
+          <div className="flex flex-col gap-4">
+            <h3 className="text-2xl lg:text-3xl font-bold text-secondary-500 dark:text-primary-500">
+              Colores Disponibles
+            </h3>
+            <div className="flex flex-wrap gap-4">
+              {productColors.map((color) => (
                 <motion.div
-                  key={images[selectedImage].url}
-                  variants={imageVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  transition={{ duration: 0.15 }}
-                  className="w-full h-full aspect-square"
+                  key={color.id}
+                  className="flex flex-col items-center gap-2 group"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <img
-                    src={images[selectedImage].url}
-                    alt={product.name}
-                    className="object-contain w-full h-full aspect-square"
-                    onLoadStart={() => "loading"}
-                    onLoad={() => "loaded"}
-                  />
-                </motion.div>
-              </AnimatePresence>
-            )}
-          </div>
-          {/* Menú de selección de imágenes (thumbnails) */}
-          <div className="flex flex-row lg:hidden overflow-y-auto gap-1 h-full">
-            {images &&
-              images.map((image, index) => (
-                <img
-                  key={index}
-                  src={image.url}
-                  alt={product.name}
-                  className="object-cover w-24 h-24 cursor-pointer lg:hover:opacity-50 lg:hover:scale-110 transition-transform duration-300 p-2"
-                  onClick={() => handleThumbnailClick(index)}
-                />
-              ))}
-          </div>
-        </div>
-        <div className="flex flex-col gap-4 p-4 col-span-5">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl lg:text-2xl font-bold">Colores</h3>
-            <div className="flex gap-2">
-              {color &&
-                color.map((color, index) =>
-                  color.multicolor ? (
+                  {color.multicolor ? (
                     <div
-                      key={index}
-                      className="w-8 h-8 rounded-full"
+                      className="w-12 h-12 rounded-full ring-2 ring-white/20 group-hover:ring-primary-500 transition-all duration-300"
                       style={{
                         background: `linear-gradient(45deg, ${
                           JSON.parse(color.hex as string)[0]
@@ -152,19 +230,33 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                     />
                   ) : (
                     <div
-                      key={index}
-                      className="w-8 h-8 rounded-full"
+                      className="w-12 h-12 rounded-full ring-2 ring-white/20 group-hover:ring-primary-500 transition-all duration-300"
                       style={{ backgroundColor: color.hex as string }}
                     />
-                  )
-                )}
+                  )}
+                  <span className="text-sm text-secondary-400 group-hover:text-white transition-colors">
+                    {color.name}
+                  </span>
+                </motion.div>
+              ))}
             </div>
           </div>
 
-          <p className="text-sm lg:text-base text-secondary-400">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="text-base lg:text-lg text-secondary-400 leading-relaxed"
+          >
             {product.description}
-          </p>
-          <div className="-p-2 -mx-2">
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="space-y-2"
+          >
             <Accordion variant="splitted" itemClasses={itemClasses}>
               <AccordionItem key="Corte" aria-label="Corte" title="Corte">
                 {product.corte}
@@ -196,34 +288,44 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                 {product.casco}
               </AccordionItem>
             </Accordion>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       </div>
-      <div className="flex flex-col lg:flex-row gap-4 h-full">
-        <img
+
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8 }}
+        className="flex flex-col lg:flex-row gap-8 items-center justify-center py-8"
+      >
+        <motion.img
+          whileHover={{ scale: 1.02 }}
           src="/qualityImg.png"
           alt="Calidad"
           className="lg:w-2/3 w-full object-contain"
         />
-        <div className="flex flex-row lg:flex-col gap-4 overflow-x-auto h-full space-between">
-          <img
+        <div className="flex flex-row lg:flex-col gap-6 w-full lg:w-fit overflow-x-auto lg:overflow-hidden">
+          <motion.img
+            whileHover={{ scale: 1.05 }}
             src="/nom.png"
             alt="NOM"
             className="h-28 w-auto object-contain"
           />
-          <img
+          <motion.img
+            whileHover={{ scale: 1.05 }}
             src="/osha.png"
             alt="OSHA"
             className="h-28 w-auto object-contain"
           />
-          <img
+          <motion.img
+            whileHover={{ scale: 1.05 }}
             src="/astm.png"
             alt="ASTM"
             className="h-28 w-auto object-contain"
           />
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 };
 

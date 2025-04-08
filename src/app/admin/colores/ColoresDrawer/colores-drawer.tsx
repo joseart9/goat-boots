@@ -30,6 +30,7 @@ interface ColoresDrawerProps {
   onClose: () => void;
   onSubmit: (data: ColorFormData) => void;
   initialData?: Colors;
+  loading?: boolean;
 }
 
 export function ColoresDrawer({
@@ -37,6 +38,7 @@ export function ColoresDrawer({
   onClose,
   onSubmit,
   initialData,
+  loading = false,
 }: ColoresDrawerProps) {
   const [isMulticolor, setIsMulticolor] = useState(
     initialData?.multicolor || false
@@ -94,7 +96,7 @@ export function ColoresDrawer({
     >
       <DrawerContent>
         <DrawerHeader className="border-b">
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-xl font-semibold text-white">
             {initialData ? "Editar Color" : "Nuevo Color"}
           </h2>
         </DrawerHeader>

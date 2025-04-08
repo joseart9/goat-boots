@@ -10,7 +10,7 @@ export default interface Product {
   stock?: number;
   category?: string;
   category_id?: string;
-  color_id?: string;
+  colors?: string[]; // Array de IDs de colores
 
   // Especificaciones
   corte?: string;

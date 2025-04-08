@@ -66,7 +66,7 @@ export function CreateCategoryDrawer({
     >
       <DrawerContent>
         <DrawerHeader className="border-b">
-          <h2 className="text-xl font-semibold">Nueva Categoría</h2>
+          <h2 className="text-xl font-semibold text-white">Nueva Categoría</h2>
         </DrawerHeader>
         <DrawerBody>
           <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">

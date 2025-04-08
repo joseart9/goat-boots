@@ -15,6 +15,8 @@ import ImageUpload from "@/app/components/imgUpload";
 import { useForm } from "react-hook-form";
 import Product from "@/app/types/Product";
 import { useColors } from "@/app/hooks/use-colors";
+import { updateProductColors } from "@/server/services/products";
+import { products } from "@/app/MockData/products";
 
 interface ProductDrawerProps {
   isOpen: boolean;
@@ -58,6 +60,7 @@ export function ProductDrawer({
       corrida: "",
       construccion: "",
       casco: "",
+      colors: [],
     },
   });
 
@@ -73,12 +76,9 @@ export function ProductDrawer({
         }
       });
 
-      // set colores - handle both string and array cases
-      if (initialData.color_id) {
-        const colorIds = Array.isArray(initialData.color_id)
-          ? initialData.color_id
-          : [initialData.color_id];
-        setValue("colores", colorIds);
+      // Set colors if they exist
+      if (initialData.colors) {
+        setValue("colores", initialData.colors);
       }
 
       // Set images if they exist
@@ -95,13 +95,25 @@ export function ProductDrawer({
     }
   }, [initialData, setValue, reset, imagesFromDb]);
 
-  const handleFormSubmit = (data: any) => {
+  const handleFormSubmit = async (data: any) => {
     const formData = {
       ...data,
       images: images.filter((img) => img !== null),
       savedImages: savedImages,
     };
-    onSubmit(formData);
+
+    try {
+      // If we're editing an existing product, update the colors
+      if (initialData?.id && data.colores) {
+        await updateProductColors(initialData.id, data.colores);
+      }
+
+      onSubmit(formData);
+    } catch (error) {
+      console.error("Error updating product:", error);
+      // Still submit the form even if color update fails
+      onSubmit(formData);
+    }
   };
 
   const handleUploadComplete = (url: string) => {
@@ -114,6 +126,8 @@ export function ProductDrawer({
   //  ("Initial data:", initialData);
   //  ("Category ID:", categoryId);
 
+  console.log(colors);
+
   return (
     <Drawer
       isOpen={isOpen}
@@ -125,7 +139,7 @@ export function ProductDrawer({
     >
       <DrawerContent>
         <DrawerHeader className="border-b">
-          <h2 className="text-xl font-semibold">
+          <h2 className="text-xl font-semibold text-white">
             {initialData ? "Editar Producto" : "Nuevo Producto"}
           </h2>
         </DrawerHeader>

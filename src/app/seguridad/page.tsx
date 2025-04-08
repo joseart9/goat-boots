@@ -125,7 +125,7 @@ const AnimatedBar = ({
         whileInView={{ opacity: 1, x: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.5, delay: delay + 0.2 }}
-        className="w-12 text-sm font-medium text-secondary-400 group-hover:text-primary-500 transition-colors duration-300"
+        className="w-12 text-sm font-medium text-secondary-400 group-hover:text-primary-500 transition-colors duration-300 "
       >
         {value}%
       </motion.div>
@@ -208,7 +208,7 @@ export default function Seguridad() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative w-full flex flex-col justify-center items-center gap-8 py-12 lg:py-16 overflow-hidden"
+      className="relative w-full flex flex-col justify-center items-center gap-8 py-12 lg:py-16 overflow-hidden mt-20 md:mt-0"
     >
       {/* Enhanced decorative background elements with parallax */}
       <motion.div

@@ -14,7 +14,7 @@ export default function Nosotros() {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
-      className="relative w-full flex flex-col justify-center items-center gap-8 py-12 lg:py-16 overflow-hidden overflow-x-hidden"
+      className="relative w-full flex flex-col justify-center items-center gap-8 py-12 lg:py-16 overflow-hidden overflow-x-hidden mt-20 md:mt-0"
     >
       {/* Enhanced decorative background elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -270,57 +270,6 @@ export default function Nosotros() {
                 title="Responsabilidad"
                 description="Compromiso con prácticas comerciales sostenibles y éticas."
                 icon={<LiaPeopleCarrySolid className="size-48" />}
-              />
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Additional Values Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.5, delay: 0.5 }}
-          className="flex flex-col gap-8"
-        >
-          <div className="flex flex-col lg:grid grid-cols-3 gap-6 px-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: 0.6 }}
-              className="col-span-1"
-            >
-              <LandingFeature
-                title="Compromiso"
-                description="Dedicación total a la satisfacción de nuestros clientes y al bienestar de nuestros empleados."
-                icon={<FaHandshake className="size-48" />}
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: 0.7 }}
-              className="col-span-1"
-            >
-              <LandingFeature
-                title="Pasión"
-                description="Amor por lo que hacemos y compromiso con la excelencia en cada detalle."
-                icon={<FaHeart className="size-48" />}
-              />
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.5, delay: 0.9 }}
-              className="col-span-1"
-            >
-              <LandingFeature
-                title="Excelencia"
-                description="Búsqueda constante de la perfección en cada aspecto de nuestro trabajo."
-                icon={<FaStar className="size-48" />}
               />
             </motion.div>
           </div>
