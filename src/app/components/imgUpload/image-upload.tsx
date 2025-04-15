@@ -2,6 +2,7 @@ import { CustomImg } from "@/app/types/CustomImg";
 import { Button, Image } from "@heroui/react";
 import { useState } from "react";
 import { deleteImage } from "@/server/actions/delete-image";
+import { getCookie } from "cookies-next";
 
 interface ImageUploadProps {
   images: any[];
@@ -30,12 +31,13 @@ export default function ImageUpload({
 
     try {
       setIsUploading(true);
+      const token = getCookie("admin_token");
       const uploadUrl = `https://${process.env.NEXT_PUBLIC_IMG_UPLOAD_URL}`;
       const response = await fetch(uploadUrl, {
         method: "POST",
         body: formData,
         headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_AUTH_ARAF}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
