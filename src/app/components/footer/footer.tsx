@@ -201,7 +201,7 @@ export default function FooterSection() {
             href="https://www.arafinnovations.com"
             className="text-secondary-400 hover:text-primary-500 transition-colors duration-300 text-sm"
           >
-            Powered by Araf Innovations &copy; {date.getFullYear()}
+            Powered by Araf Innovations &copy; {date.getFullYear() - 1}
           </Link>
         </motion.div>
       </div>

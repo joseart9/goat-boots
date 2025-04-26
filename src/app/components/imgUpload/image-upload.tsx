@@ -39,6 +39,7 @@ export default function ImageUpload({
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
       });
 
       if (!response.ok) {
