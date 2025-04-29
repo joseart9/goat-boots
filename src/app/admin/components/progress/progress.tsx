@@ -29,13 +29,19 @@ export function CustomProgress({
     <div className="space-y-2">
       {label && (
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium text-foreground">{label}</span>
+          <span className="text-sm font-medium text-black dark:text-white">
+            {label}
+          </span>
           {showValue && (
-            <span className="text-sm text-muted-foreground">{value}%</span>
+            <span className="text-sm text-black dark:text-white">{value}%</span>
           )}
         </div>
       )}
-      <Progress value={value} className={cn(sizeClasses[size], className)} />
+      <Progress
+        value={value}
+        className={cn(sizeClasses[size], className)}
+        color="white"
+      />
     </div>
   );
 }
