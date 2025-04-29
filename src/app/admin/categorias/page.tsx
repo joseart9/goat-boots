@@ -10,7 +10,11 @@ import { CategoryForm } from "./category-form";
 import { ConfirmDialog } from "@/app/admin/components/confirm-dialog";
 import { toast } from "sonner";
 import Category from "@/app/types/Category";
-import { createCategory, deleteCategory } from "@/server/actions/category";
+import {
+  createCategory,
+  deleteCategory,
+  updateCategory,
+} from "@/server/actions/category";
 import { uploadImage } from "@/app/actions/upload-image";
 import { ProgressModal } from "@/app/admin/components/progress-modal";
 
@@ -24,6 +28,7 @@ export default function CategoriasPage() {
     null
   );
   const [isDeleting, setIsDeleting] = useState(false);
+  const [categoryToEdit, setCategoryToEdit] = useState<Category | null>(null);
 
   if (loading) {
     return (
@@ -47,10 +52,10 @@ export default function CategoriasPage() {
     setUploadProgress(0);
     try {
       // First upload the image if it exists and is a File object
-      let imgUrl = "";
+      let imgUrl = categoryData.img as string;
       if (
-        categoryData.img &&
         typeof categoryData.img === "object" &&
+        categoryData.img !== null &&
         "arrayBuffer" in categoryData.img
       ) {
         setUploadProgress(20);
@@ -59,23 +64,42 @@ export default function CategoriasPage() {
         setUploadProgress(50);
       }
 
-      // Then create the category
-      await createCategory({
-        ...categoryData,
-        img: imgUrl || categoryData.img,
-      });
+      if (categoryToEdit) {
+        // Update existing category
+        await updateCategory(categoryToEdit.id as number, {
+          ...categoryData,
+          img: imgUrl,
+        });
+        toast.success("Categoría actualizada exitosamente");
+      } else {
+        // Create new category
+        await createCategory({
+          ...categoryData,
+          img: imgUrl,
+        });
+        toast.success("Categoría creada exitosamente");
+      }
 
       setUploadProgress(100);
-      toast.success("Categoría creada exitosamente");
       setIsDrawerOpen(false);
+      setCategoryToEdit(null);
       mutate();
     } catch (error) {
-      console.error("Error creating category:", error);
-      toast.error("Error al crear la categoría");
+      console.error("Error saving category:", error);
+      toast.error(
+        categoryToEdit
+          ? "Error al actualizar la categoría"
+          : "Error al crear la categoría"
+      );
     } finally {
       setIsSubmitting(false);
       setUploadProgress(0);
     }
+  };
+
+  const handleEditClick = (category: Category) => {
+    setCategoryToEdit(category);
+    setIsDrawerOpen(true);
   };
 
   const handleDeleteClick = (category: Category) => {
@@ -101,6 +125,11 @@ export default function CategoriasPage() {
     }
   };
 
+  const handleDrawerClose = () => {
+    setIsDrawerOpen(false);
+    setCategoryToEdit(null);
+  };
+
   return (
     <div className="flex min-h-screen">
       <main className="flex-1 p-8">
@@ -116,25 +145,37 @@ export default function CategoriasPage() {
         </div>
         <CategoryTable
           data={data || []}
-          onEdit={() => {}}
+          onEdit={handleEditClick}
           onDelete={handleDeleteClick}
         />
 
         <CustomDrawer
           open={isDrawerOpen}
-          onOpenChange={setIsDrawerOpen}
-          title="Agregar Categoría"
-          description="Agregar nueva categoría al catálogo"
+          onOpenChange={handleDrawerClose}
+          title={categoryToEdit ? "Editar Categoría" : "Agregar Categoría"}
+          description={
+            categoryToEdit
+              ? "Editar categoría existente"
+              : "Agregar nueva categoría al catálogo"
+          }
           size="2xl"
         >
-          <CategoryForm onSubmit={handleSubmit} isLoading={isSubmitting} />
+          <CategoryForm
+            categoryId={categoryToEdit?.id?.toString()}
+            onSubmit={handleSubmit}
+            isLoading={isSubmitting}
+          />
         </CustomDrawer>
 
         <ProgressModal
           isOpen={isSubmitting}
           progress={uploadProgress}
-          title="Creando Categoría"
-          description="Por favor espere mientras se crea la categoría..."
+          title={
+            categoryToEdit ? "Actualizando Categoría" : "Creando Categoría"
+          }
+          description={`Por favor espere mientras se ${
+            categoryToEdit ? "actualiza" : "crea"
+          } la categoría...`}
         />
 
         <ConfirmDialog
