@@ -14,7 +14,9 @@ export function ColorTable({ data, onEdit, onDelete }: ColorTableProps) {
     if (!hex) return [];
     if (Array.isArray(hex)) return hex;
     try {
-      return JSON.parse(hex);
+      // Try to parse if it's a stringified array
+      const parsed = JSON.parse(hex);
+      return Array.isArray(parsed) ? parsed : [hex];
     } catch {
       return [hex];
     }

@@ -34,4 +34,8 @@ export const adminRoutes = [
     name: "Colores",
     href: "/admin/colores",
   },
+  {
+    name: "Dashboard",
+    href: "/admin/dashboard",
+  },
 ];

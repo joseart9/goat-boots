@@ -100,7 +100,7 @@ export default function ColoresPage() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-secondary-100/25 dark:bg-secondary-500/25">
       <main className="flex-1 p-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Colores</h1>
@@ -131,6 +131,7 @@ export default function ColoresPage() {
         >
           <ColorForm
             colorId={colorToEdit?.id}
+            colorToEdit={colorToEdit || undefined}
             onSubmit={handleSubmit}
             isLoading={isSubmitting}
           />
@@ -144,7 +145,6 @@ export default function ColoresPage() {
           description={`¿Está seguro que desea eliminar el color "${colorToDelete?.name}"?`}
           confirmText="Eliminar"
           isLoading={isDeleting}
-          importantText="Esta acción eliminará el color y todos los productos asociados a este color."
         />
       </main>
     </div>

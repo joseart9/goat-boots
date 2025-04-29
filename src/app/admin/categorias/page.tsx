@@ -131,7 +131,7 @@ export default function CategoriasPage() {
   };
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-secondary-100/25 dark:bg-secondary-500/25">
       <main className="flex-1 p-8">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Categorías</h1>

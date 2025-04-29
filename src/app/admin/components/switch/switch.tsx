@@ -23,7 +23,9 @@ export function Switch({
       <div className="flex items-center space-x-2">
         <ShadcnSwitch
           className={cn(
-            "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
+            "data-[state=checked]:bg-primary-500 data-[state=unchecked]:bg-secondary-400 dark:data-[state=unchecked]:bg-secondary-400",
+            "h-6",
+            "transition-colors duration-200",
             className
           )}
           {...props}
