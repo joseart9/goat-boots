@@ -4,7 +4,7 @@ import { ColorsTable } from "./ColoresTable/colores-table";
 import { ColoresDrawer } from "./ColoresDrawer/colores-drawer";
 import { useDisclosure } from "@heroui/react";
 import Colors from "@/app/types/Colors";
-import { createColor } from "@/server/actions/create-color";
+import { createColor } from "@/server/actions/color";
 import { useColors } from "@/app/hooks/use-colors";
 
 export default function AdminColores() {
