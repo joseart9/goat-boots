@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Input from "@/app/components/ui/Input";
+import { CustomInput as Input } from "@/app/admin/components/input";
 import { useState } from "react";
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 
@@ -189,7 +189,6 @@ export default function Contacto() {
                     </label>
                     <Input
                       name="email"
-                      type="email"
                       value={formData.email}
                       onChange={handleChange}
                       placeholder="correo@dominio.com"
@@ -208,7 +207,6 @@ export default function Contacto() {
                   </label>
                   <Input
                     name="phone"
-                    type="tel"
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="Número de teléfono"

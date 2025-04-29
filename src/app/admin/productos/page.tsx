@@ -1,173 +1,199 @@
 "use client";
 
-import { useDisclosure } from "@heroui/react";
-import { ProductDrawer } from "./components/ProductDrawer";
-import useProducts from "@/app/hooks/useProducts";
-import ProductsTable from "./components/ProductsTable";
 import { useState } from "react";
+import useProducts from "@/app/hooks/useProducts";
+import { ProductsTable } from "./ProductsTable/products-table";
 import Product from "@/app/types/Product";
-import { createProduct } from "@/server/actions/create-product";
+import { CustomButton } from "@/app/admin/components/button";
+import { CustomDrawer } from "@/app/admin/components/drawer";
+import { ProductForm } from "./product-form";
+import { Plus } from "lucide-react";
+import {
+  createProduct,
+  deleteProduct,
+  updateProduct,
+} from "@/server/actions/product";
+import { uploadImage } from "@/app/actions/upload-image";
 import { createImage } from "@/server/actions/create-image";
-import useProduct from "@/app/hooks/use-product";
-import useImages from "@/app/hooks/use-images";
-import { updateProduct } from "@/server/actions/update-product";
 import { updateProductColors } from "@/server/services/products";
+import { toast } from "sonner";
+import CustomImage from "@/app/types/CustomImage";
+import { ProgressModal } from "@/app/admin/components/progress-modal";
+import { ConfirmDialog } from "@/app/admin/components/confirm-dialog";
 
-export default function AdminProducts() {
-  // All hooks must be at the top level, before any conditional returns
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data, error, loading } = useProducts();
-  const [search, setSearch] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState<
-    string | undefined
-  >(undefined);
+export default function AdminProductos() {
+  const { data, loading, error, mutate } = useProducts();
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Always call these hooks, they handle their own enabled/disabled state
-  const { data: selectedProduct } = useProduct(selectedProductId);
-  const { images, isLoading: imagesLoading } = useImages(selectedProductId);
-
-  const rows = data || [];
-
-  const handleCreateProduct = async (data: any) => {
-    setIsLoading(true);
-    const producto = {
-      name: data.name,
-      description: data.description,
-      category_id: data.categoryId,
-      corte: data.corte,
-      suela: data.suela,
-      plantilla: data.plantilla,
-      forro: data.forro,
-      corrida: data.corrida,
-      construccion: data.construccion,
-      casco: data.casco,
-    };
-
-    const response = await createProduct(producto);
-
-    if (!response) {
-      return;
-    }
-
-    const productId = response[0].id;
-
-    const images = data.images;
-
-    const imagesToUpload = images.map((image: string) => {
-      return {
-        url: image,
-        product_id: productId,
-      };
-    });
-
-    imagesToUpload.forEach(async (image: any) => {
-      await createImage(image);
-    });
-
-    // Update colors
-    const colors = data.colores;
-    const colorIds = colors.map((color: string) => Number(color));
-    await updateProductColors(productId, colorIds);
-
-    // Close the drawer
-    onClose();
-    setIsLoading(false);
-  };
-
-  const handleUpdateProduct = async (data: any) => {
-    setIsLoading(true);
-    const flatColores = data.colores.join(",");
-    const productToUpdate = {
-      id: selectedProductId,
-      name: data.name,
-      description: data.description,
-      category_id: data.categoryId,
-      corte: data.corte,
-      suela: data.suela,
-      plantilla: data.plantilla,
-      forro: data.forro,
-      corrida: data.corrida,
-      construccion: data.construccion,
-      casco: data.casco,
-    };
-    const response = await updateProduct(productToUpdate);
-    if (!response) {
-      ("Error al actualizar el producto");
-      return;
-    }
-
-    // Update images
-    const images = data.images;
-    const imagesToUpload = images.map((image: string) => {
-      return {
-        url: image,
-        product_id: selectedProductId,
-      };
-    });
-
-    imagesToUpload.forEach(async (image: any) => {
-      await createImage(image);
-    });
-
-    onClose();
-    setIsLoading(false);
-  };
-
-  const handleEditProduct = (productId: string) => {
-    setSelectedProductId(productId);
-    onOpen();
-  };
-
-  const handleCloseDrawer = () => {
-    setSelectedProductId(undefined);
-    onClose();
-  };
-
-  // Conditional return after all hooks
   if (loading) {
     return (
-      <div>
-        <p>Loading...</p>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full animate-spin" />
+          <p className="text-lg font-medium text-muted-foreground">
+            Cargando...
+          </p>
+        </div>
       </div>
     );
   }
 
+  if (error) {
+    return <div className="min-h-screen">Error: {error.message}</div>;
+  }
+
+  // Transform the data to match our Product interface
+  const transformedData: Product[] = (data || []).map((item) => ({
+    id: item.id || "",
+    category: item.category || "",
+    name: item.name || "",
+    description: item.description || "",
+  }));
+
+  const handleSubmit = async (productData: Omit<Product, "id">) => {
+    setIsSubmitting(true);
+    setUploadProgress(0);
+    try {
+      // First create the product
+      const product = await createProduct({
+        name: productData.name,
+        description: productData.description,
+        corte: productData.corte || "",
+        suela: productData.suela || "",
+        plantilla: productData.plantilla || "",
+        forro: productData.forro || "",
+        corrida: productData.corrida || "",
+        construccion: productData.construccion || "",
+        casco: productData.casco || "",
+        category_id: productData.category,
+      });
+
+      setUploadProgress(20); // 20% after product creation
+      const productId = product?.id;
+
+      // Then upload images if there are any
+      if (productData.images && productData.images.length > 0) {
+        const totalImages = productData.images.length;
+        let completedImages = 0;
+
+        const uploadPromises = productData.images.map(async (file) => {
+          // Upload image to storage
+          const uploadResult = await uploadImage(file);
+
+          // Create image record in database
+          const imageData: CustomImage = {
+            url: uploadResult.data.url,
+            alt: productData.name,
+            product_id: productId,
+          };
+
+          await createImage(imageData);
+
+          // Update progress
+          completedImages++;
+          const imageProgress = (completedImages / totalImages) * 60; // 60% of total progress
+          setUploadProgress(20 + imageProgress); // 20% + image progress
+        });
+
+        await Promise.all(uploadPromises);
+      }
+
+      setUploadProgress(80); // 80% after images
+
+      // Finally, register product colors
+      if (productData.colors && productData.colors.length > 0) {
+        await updateProductColors(productId, productData.colors);
+      }
+
+      setUploadProgress(100); // 100% after colors
+      toast.success("Producto creado exitosamente");
+      setIsDrawerOpen(false);
+      mutate(); // Refresh the products list
+    } catch (error) {
+      console.error("Error creating product:", error);
+      toast.error("Error al crear el producto");
+    } finally {
+      setIsSubmitting(false);
+      setUploadProgress(0);
+    }
+  };
+
+  const handleDeleteClick = (product: Product) => {
+    setProductToDelete(product);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!productToDelete) return;
+
+    setIsDeleting(true);
+    try {
+      await deleteProduct(productToDelete.id);
+      toast.success("Producto eliminado exitosamente");
+      mutate(); // Refresh the products list
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Error al eliminar el producto");
+    } finally {
+      setIsDeleting(false);
+      setDeleteDialogOpen(false);
+      setProductToDelete(null);
+    }
+  };
+
   return (
-    <div className="p-6 min-h-screen">
-      <div className="flex w-full items-center justify-between bg-transparent dark:bg-secondary-500 py-3 rounded-lg shadow-sm text-white gap-6 mb-4">
-        <div className="flex flex-row flex-auto overflow-x-scroll w-full gap-2">
-          <h1 className="text-2xl font-bold text-secondary-500 dark:text-white">
-            Productos
-          </h1>
-        </div>
-        <div className="flex flex-row w-fit gap-2">
-          <button
-            className="bg-green-500 py-2 px-4 rounded-lg hover:bg-green-400"
-            onClick={() => {
-              setSelectedProductId(undefined);
-              onOpen();
-            }}
+    <div className="flex min-h-screen bg-secondary-100/25 dark:bg-secondary-500/25">
+      <main className="flex-1 p-8">
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-2xl font-bold">Productos</h1>
+          <CustomButton
+            leftIcon={<Plus />}
+            onClick={() => setIsDrawerOpen(true)}
+            variant="secondary"
           >
-            Agregar
-          </button>
-          <input
-            placeholder="Buscar por nombre"
-            className="text-secondary-500 rounded-md focus:border focus:border-secondary-500"
-          />
+            Agregar Producto
+          </CustomButton>
         </div>
-      </div>
-      <div>
-        <ProductsTable rows={rows} handleEditRow={handleEditProduct} />
-      </div>
-      <ProductDrawer
-        isOpen={isOpen}
-        onClose={handleCloseDrawer}
-        onSubmit={selectedProductId ? handleUpdateProduct : handleCreateProduct}
-        isLoading={isLoading || imagesLoading}
-        initialData={selectedProduct || undefined}
-        imagesFromDb={images || []}
-      />
+        <ProductsTable
+          data={transformedData}
+          onEdit={(product) => {
+            console.log("Edit product:", product);
+          }}
+          onDelete={handleDeleteClick}
+        />
+
+        <CustomDrawer
+          open={isDrawerOpen}
+          onOpenChange={setIsDrawerOpen}
+          title="Agregar Producto"
+          description="Agregar nuevo producto al catalogo"
+          size="2xl"
+        >
+          <ProductForm onSubmit={handleSubmit} isLoading={isSubmitting} />
+        </CustomDrawer>
+
+        <ProgressModal
+          isOpen={isSubmitting}
+          progress={uploadProgress}
+          title="Creando Producto"
+          description="Por favor espere mientras se crea el producto..."
+        />
+
+        <ConfirmDialog
+          isOpen={deleteDialogOpen}
+          onClose={() => setDeleteDialogOpen(false)}
+          onConfirm={handleDeleteConfirm}
+          title="Eliminar Producto"
+          description={`¿Está seguro que desea eliminar el producto "${productToDelete?.name}"? Esta acción no se puede deshacer.`}
+          confirmText="Eliminar"
+          isLoading={isDeleting}
+        />
+      </main>
     </div>
   );
 }

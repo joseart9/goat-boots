@@ -12,6 +12,7 @@ import {
   FaMapMarkerAlt,
   FaPhone,
 } from "react-icons/fa";
+import { usePathname } from "next/navigation";
 
 const socials = [
   {
@@ -58,10 +59,17 @@ export default function FooterSection() {
   const isDarkMode = useDarkMode();
   const date = new Date();
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
   useEffect(() => {
     setMounted(true);
   }, []);
   if (!mounted) {
+    return null;
+  }
+
+  // if pathname starts with /admin ignore footer
+
+  if (pathname.includes("/admin")) {
     return null;
   }
 

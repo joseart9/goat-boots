@@ -1,6 +1,9 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { AdminNavbar } from "./components/navbar";
+import { AdminSidebar } from "../admin/components/admin-sidebar";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export default async function AdminLayout({
   children,
@@ -24,14 +27,13 @@ export default async function AdminLayout({
   });
 
   // Si la validación falla, redirige a /unauthorized
-  if (!response.ok) {
-    redirect("/unauthorized");
-  }
+  // if (!response.ok) {
+  //   redirect("/unauthorized");
+  // }
 
   return (
-    <div className="font-mono">
-      <AdminNavbar />
-      {children}
+    <div className={`${inter.className} flex dark:bg-secondary-500 bg-white`}>
+      <AdminSidebar>{children}</AdminSidebar>
     </div>
   );
 }

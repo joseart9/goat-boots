@@ -1,3 +1,3 @@
-export default function AdminPedidos() {
-  return <div>AdminPedidos</div>;
+export default function Pedidos() {
+  return <div className="min-h-screen flex">Pedidos</div>;
 }
