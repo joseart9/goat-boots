@@ -5,8 +5,8 @@ export default interface Product {
   id: string;
   name: string;
   description: string;
-  category: string;
-  colors: string[];
+  category?: string;
+  colors?: string[];
   images?: File[];
   newImages?: File[];
   existingImages?: string[];
