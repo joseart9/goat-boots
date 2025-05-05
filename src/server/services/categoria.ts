@@ -38,3 +38,13 @@ export async function getCategoria(id: string): Promise<Categoria | null> {
     return null;
   }
 }
+
+export async function getCategoryByName(name: string) {
+  try {
+    const categoria = await db`SELECT * FROM categorias WHERE name = ${name}`;
+    return categoria[0];
+  } catch (error) {
+    console.error("Error al obtener la categoria", error);
+    return null;
+  }
+}

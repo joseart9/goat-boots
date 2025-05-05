@@ -8,6 +8,8 @@ export default interface Product {
   category?: string;
   colors?: string[];
   images?: File[];
+  newImages?: File[];
+  existingImages?: string[];
   corte?: string;
   suela?: string;
   plantilla?: string;
@@ -16,4 +18,5 @@ export default interface Product {
   construccion?: string;
   casco?: string;
   category_id?: string;
+  removedImages?: string[];
 }
