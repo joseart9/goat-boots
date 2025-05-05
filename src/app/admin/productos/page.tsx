@@ -21,6 +21,7 @@ import { toast } from "sonner";
 import CustomImage from "@/app/types/CustomImage";
 import { ProgressModal } from "@/app/admin/components/progress-modal";
 import { ConfirmDialog } from "@/app/admin/components/confirm-dialog";
+import { deleteImage } from "@/server/actions/delete-image";
 
 export default function AdminProductos() {
   const { data, loading, error, mutate } = useProducts();
@@ -127,7 +128,6 @@ export default function AdminProductos() {
   };
 
   const handleUpdate = async (productData: Product) => {
-    // console.log(productData);
     setIsSubmitting(true);
     setUploadProgress(0);
     try {
@@ -146,7 +146,26 @@ export default function AdminProductos() {
         casco: productData.casco || "",
       });
 
-      setUploadProgress(50); // 50% after product update
+      setUploadProgress(30); // 30% after product update
+
+      // Handle removed images
+      if (productData.removedImages && productData.removedImages.length > 0) {
+        const totalRemoved = productData.removedImages.length;
+        let completedRemoved = 0;
+
+        const deletePromises = productData.removedImages.map(
+          async (imageId: string) => {
+            await deleteImage(imageId);
+            completedRemoved++;
+            const removeProgress = (completedRemoved / totalRemoved) * 20; // 20% of total progress
+            setUploadProgress(30 + removeProgress); // 30% + removal progress
+          }
+        );
+
+        await Promise.all(deletePromises);
+      }
+
+      setUploadProgress(50); // 50% after handling removed images
 
       // Then handle new images if there are any
       if (productData.newImages && productData.newImages.length > 0) {

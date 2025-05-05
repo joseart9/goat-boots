@@ -5,8 +5,8 @@ export default interface Product {
   id: string;
   name: string;
   description: string;
-  category?: string;
-  colors?: string[];
+  category: string;
+  colors: string[];
   images?: File[];
   newImages?: File[];
   existingImages?: string[];
@@ -18,4 +18,5 @@ export default interface Product {
   construccion?: string;
   casco?: string;
   category_id?: string;
+  removedImages?: string[];
 }

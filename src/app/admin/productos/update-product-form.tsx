@@ -45,6 +45,7 @@ export function UpdateProductForm({
   });
   const [newImages, setNewImages] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<ImageData[]>([]);
+  const [removedImages, setRemovedImages] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingCategory, setIsLoadingCategory] = useState(true);
   const [isLoadingColors, setIsLoadingColors] = useState(true);
@@ -177,6 +178,7 @@ export function UpdateProductForm({
         ...formData,
         existingImages: existingImages.map((img) => img.id),
         newImages: newImages,
+        removedImages: removedImages,
       };
 
       await updateProduct(updatedProduct);
@@ -233,7 +235,15 @@ export function UpdateProductForm({
         </label>
         <UpdateImageUpload
           existingImages={existingImages}
-          onExistingImagesChange={setExistingImages}
+          onExistingImagesChange={(images) => {
+            const currentIds = images.map((img) => img.id);
+            const removedIds = existingImages
+              .filter((img) => !currentIds.includes(img.id))
+              .map((img) => img.id);
+
+            setRemovedImages((prev) => [...prev, ...removedIds]);
+            setExistingImages(images);
+          }}
           newImages={newImages}
           onNewImagesChange={setNewImages}
         />
