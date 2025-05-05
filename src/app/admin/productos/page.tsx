@@ -7,6 +7,7 @@ import Product from "@/app/types/Product";
 import { CustomButton } from "@/app/admin/components/button";
 import { CustomDrawer } from "@/app/admin/components/drawer";
 import { ProductForm } from "./product-form";
+import { UpdateProductForm } from "./update-product-form";
 import { Plus } from "lucide-react";
 import {
   createProduct,
@@ -24,6 +25,8 @@ import { ConfirmDialog } from "@/app/admin/components/confirm-dialog";
 export default function AdminProductos() {
   const { data, loading, error, mutate } = useProducts();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isEditDrawerOpen, setIsEditDrawerOpen] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -47,7 +50,7 @@ export default function AdminProductos() {
     return <div className="min-h-screen">Error: {error.message}</div>;
   }
 
-  // Transform the data to match our Product interface
+  // Transform the data to match our Product interface for the table
   const transformedData: Product[] = (data || []).map((item) => ({
     id: item.id || "",
     category: item.category || "",
@@ -123,6 +126,74 @@ export default function AdminProductos() {
     }
   };
 
+  const handleUpdate = async (productData: Product) => {
+    // console.log(productData);
+    setIsSubmitting(true);
+    setUploadProgress(0);
+    try {
+      // First update the product
+      await updateProduct({
+        id: productData.id,
+        name: productData.name,
+        description: productData.description,
+        category_id: productData.category,
+        corte: productData.corte || "",
+        suela: productData.suela || "",
+        plantilla: productData.plantilla || "",
+        forro: productData.forro || "",
+        corrida: productData.corrida || "",
+        construccion: productData.construccion || "",
+        casco: productData.casco || "",
+      });
+
+      setUploadProgress(50); // 50% after product update
+
+      // Then handle new images if there are any
+      if (productData.newImages && productData.newImages.length > 0) {
+        const totalImages = productData.newImages.length;
+        let completedImages = 0;
+
+        const uploadPromises = productData.newImages.map(async (file: File) => {
+          // Upload image to storage
+          const uploadResult = await uploadImage(file);
+
+          // Create image record in database
+          const imageData: CustomImage = {
+            url: uploadResult.data.url,
+            alt: productData.name,
+            product_id: productData.id,
+          };
+
+          await createImage(imageData);
+
+          // Update progress
+          completedImages++;
+          const imageProgress = (completedImages / totalImages) * 40; // 40% of total progress
+          setUploadProgress(50 + imageProgress); // 50% + image progress
+        });
+
+        await Promise.all(uploadPromises);
+      }
+
+      // Update product colors
+      if (productData.colors && productData.colors.length > 0) {
+        await updateProductColors(productData.id, productData.colors);
+      }
+
+      setUploadProgress(100);
+      toast.success("Producto actualizado exitosamente");
+      setIsEditDrawerOpen(false);
+      setProductToEdit(null);
+      mutate(); // Refresh the products list
+    } catch (error) {
+      console.error("Error updating product:", error);
+      toast.error("Error al actualizar el producto");
+    } finally {
+      setIsSubmitting(false);
+      setUploadProgress(0);
+    }
+  };
+
   const handleDeleteClick = (product: Product) => {
     setProductToDelete(product);
     setDeleteDialogOpen(true);
@@ -146,6 +217,15 @@ export default function AdminProductos() {
     }
   };
 
+  const handleEditClick = (product: Product) => {
+    // Find the complete product data from the original data array
+    const completeProduct = data?.find((p) => p.id === product.id);
+    if (completeProduct) {
+      setProductToEdit(completeProduct);
+      setIsEditDrawerOpen(true);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-secondary-100/25 dark:bg-secondary-500/25">
       <main className="flex-1 p-8">
@@ -161,12 +241,11 @@ export default function AdminProductos() {
         </div>
         <ProductsTable
           data={transformedData}
-          onEdit={(product) => {
-            console.log("Edit product:", product);
-          }}
+          onEdit={handleEditClick}
           onDelete={handleDeleteClick}
         />
 
+        {/* Create Product Drawer */}
         <CustomDrawer
           open={isDrawerOpen}
           onOpenChange={setIsDrawerOpen}
@@ -177,11 +256,31 @@ export default function AdminProductos() {
           <ProductForm onSubmit={handleSubmit} isLoading={isSubmitting} />
         </CustomDrawer>
 
+        {/* Edit Product Drawer */}
+        <CustomDrawer
+          open={isEditDrawerOpen}
+          onOpenChange={setIsEditDrawerOpen}
+          title="Editar Producto"
+          description="Editar producto existente"
+          size="2xl"
+        >
+          {productToEdit && (
+            <UpdateProductForm
+              product={productToEdit}
+              onSuccess={handleUpdate}
+            />
+          )}
+        </CustomDrawer>
+
         <ProgressModal
           isOpen={isSubmitting}
           progress={uploadProgress}
-          title="Creando Producto"
-          description="Por favor espere mientras se crea el producto..."
+          title={productToEdit ? "Actualizando Producto" : "Creando Producto"}
+          description={
+            productToEdit
+              ? "Por favor espere mientras se actualiza el producto..."
+              : "Por favor espere mientras se crea el producto..."
+          }
         />
 
         <ConfirmDialog

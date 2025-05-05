@@ -8,6 +8,8 @@ import { FaShoppingBag } from "react-icons/fa";
 export default function Catalogo() {
   const { data: categorias } = useCategorias();
 
+  console.log(categorias);
+
   return (
     <motion.section
       className="min-h-screen flex-grow py-16 px-4 w-full container mx-auto relative mt-20 md:mt-0"

@@ -59,7 +59,7 @@ export function CustomSelect({
         </label>
       )}
       <Select value={value} onValueChange={onValueChange} disabled={disabled}>
-        <SelectTrigger className={className}>
+        <SelectTrigger className={"text-black dark:text-white " + className}>
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent className={inter.className}>
