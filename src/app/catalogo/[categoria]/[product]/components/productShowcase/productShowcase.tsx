@@ -88,26 +88,27 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
       transition={{ duration: 0.5 }}
       className="lg:container lg:mx-auto flex flex-col min-h-dvh gap-y-8 p-4 lg:p-8 overflow-hidden"
     >
-      <motion.button
-        initial={{ x: -20, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        transition={{ delay: 0.2 }}
-        className="lg:hidden relative top-0 flex items-center gap-2 text-secondary-500/50 dark:text-white/50 py-4 text-base capitalize hover:text-secondary-500 dark:hover:text-white transition-colors"
-        onClick={() => router.back()}
-      >
-        <IoMdArrowRoundBack className="size-7" />
-        {category}
-      </motion.button>
-
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="flex flex-row justify-between items-center"
+        className="mt-12 lg:mt-0 flex flex-row justify-between items-center"
       >
-        <h2 className="text-4xl lg:text-6xl font-bold  text-secondary-500 dark:text-primary-500">
-          {product.name}
-        </h2>
+        <div className="flex flex-row gap-4 items-center">
+          <motion.button
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="lg:hidden flex items-center text-secondary-400 hover:text-primary-500 transition-colors duration-300"
+            onClick={() => router.back()}
+          >
+            <IoMdArrowRoundBack className="size-8" />
+          </motion.button>
+          <h2 className="text-4xl lg:text-6xl font-bold  text-secondary-500 dark:text-primary-500">
+            {product.name}
+          </h2>
+        </div>
+
         <Link
           href="https://wa.me/1234567890"
           target="_blank"
@@ -150,11 +151,10 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                 key={index}
                 src={image.url}
                 alt={product.name}
-                className={`object-cover w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 p-1 ${
-                  selectedImage === index
-                    ? "ring-2 ring-primary-500 scale-105"
-                    : "hover:opacity-80 hover:scale-105"
-                }`}
+                className={`object-contain w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 p-0 ${selectedImage === index
+                  ? "ring-2 ring-primary-500 scale-105"
+                  : "hover:opacity-80 hover:scale-105"
+                  }`}
                 onClick={() => handleThumbnailClick(index)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -188,11 +188,10 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                 key={index}
                 src={image.url}
                 alt={product.name}
-                className={`object-cover w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 ${
-                  selectedImage === index
-                    ? "ring-2 ring-primary-500 scale-105"
-                    : "hover:opacity-80 hover:scale-105"
-                }`}
+                className={`object-contain w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 m-1 ${selectedImage === index
+                  ? "ring-2 ring-primary-500 scale-105"
+                  : "hover:opacity-80 hover:scale-105"
+                  }`}
                 onClick={() => handleThumbnailClick(index)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -223,9 +222,8 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                     <div
                       className="w-12 h-12 rounded-full ring-2 ring-white/20 group-hover:ring-primary-500 transition-all duration-300"
                       style={{
-                        background: `linear-gradient(45deg, ${
-                          JSON.parse(color.hex as string)[0]
-                        } 50%, ${JSON.parse(color.hex as string)[1]} 50%)`,
+                        background: `linear-gradient(45deg, ${JSON.parse(color.hex as string)[0]
+                          } 50%, ${JSON.parse(color.hex as string)[1]} 50%)`,
                       }}
                     />
                   ) : (

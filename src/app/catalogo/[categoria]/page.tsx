@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { useRouter, usePathname } from "next/navigation";
 import useProducts from "@/app/hooks/useProducts";
+import useCategoriaByHref from "@/app/hooks/use-categoria-by-href";
 
 const ProductSkeleton = () => (
   <div className="animate-pulse">
@@ -15,38 +16,48 @@ const ProductSkeleton = () => (
   </div>
 );
 
+const CategorySkeleton = () => (
+  <div className="animate-pulse">
+    <div className="h-8 bg-white/5 rounded-lg w-1/2 mb-4" />
+    <div className="h-6 bg-white/5 rounded-lg w-3/4 mb-2" />
+    <div className="h-4 bg-white/5 rounded-lg w-1/2" />
+  </div>
+);
+
 export default function CatalogoCategoria() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: products, loading } = useProducts(pathname);
-  const categoryName = pathname.split("/").pop()?.replace(/-/g, " ");
+  const { data: categoryData, isLoading: isLoadingCategory } = useCategoriaByHref(pathname || "");
+  const categoryName = categoryData?.name || "";
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-transparent to-black/5">
       <div className="container mx-auto px-4 py-8 lg:py-12">
-        {/* Mobile Back Button */}
-        <motion.button
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5 }}
-          className="lg:hidden flex items-center gap-2 text-secondary-400 hover:text-primary-500 transition-colors duration-300 mb-6"
-          onClick={() => router.back()}
-        >
-          <IoMdArrowRoundBack className="size-6" />
-          <span>Volver a Categorías</span>
-        </motion.button>
+        <div className="flex flex-row items-center mb-6 mt-12 gap-4">
+          {/* Mobile Back Button */}
+          <motion.button
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.5 }}
+            className="lg:hidden flex items-center text-secondary-400 hover:text-primary-500 transition-colors duration-300"
+            onClick={() => router.back()}
+          >
+            <IoMdArrowRoundBack className="size-8" />
+          </motion.button>
 
-        {/* Category Title - Mobile Only */}
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="lg:hidden text-2xl font-bold mb-8 capitalize"
-        >
-          <span className="bg-gradient-to-r from-primary-500 to-primary-300 bg-clip-text text-transparent">
-            {categoryName}
-          </span>
-        </motion.h1>
+          {/* Category Title - Mobile Only */}
+          <motion.h1
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="lg:hidden text-2xl font-bold capitalize"
+          >
+            <span className="bg-gradient-to-r from-primary-500 to-primary-300 bg-clip-text text-transparent">
+              {categoryName}
+            </span>
+          </motion.h1>
+        </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
@@ -61,8 +72,8 @@ export default function CatalogoCategoria() {
               transition={{ duration: 0.5 }}
               className="hidden lg:block text-3xl font-bold mb-8 capitalize"
             >
-              <span className="dark:text-primary-500 text-secondary-500 bg-clip-text">
-                {categoryName}
+              <span className=" text-secondary-500 dark:text-white">
+                {isLoadingCategory ? <CategorySkeleton /> : categoryName}
               </span>
             </motion.h1>
 
@@ -109,6 +120,6 @@ export default function CatalogoCategoria() {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 }
