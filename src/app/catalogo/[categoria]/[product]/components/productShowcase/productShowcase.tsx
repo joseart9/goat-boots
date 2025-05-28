@@ -11,6 +11,9 @@ import { Spinner } from "@heroui/spinner";
 import useProduct from "@/app/hooks/use-product";
 import useImages from "@/app/hooks/use-images";
 import { useColors } from "@/app/hooks/use-colors";
+import { CustomButton } from "@/app/admin/components/button";
+import { ShoppingCart } from "lucide-react";
+import { useCart } from "@/app/providers/CartProvider";
 
 interface ProductShowcaseProps {
   productId: string;
@@ -21,6 +24,7 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
+  const { addToCart } = useCart();
 
   const { data: product, isLoading, error } = useProduct(productId);
   const {
@@ -81,6 +85,10 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
     setSelectedImage(index);
   };
 
+  const handleAddToCart = () => {
+    addToCart(product);
+  };
+
   return (
     <motion.section
       initial={{ opacity: 0 }}
@@ -124,16 +132,6 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
           >
             <FaWhatsapp className="size-12 text-primary-500" />
           </motion.div>
-          <motion.span
-            initial={{ opacity: 0, y: 10 }}
-            animate={{
-              opacity: isHovered ? 1 : 0,
-              y: isHovered ? 0 : 10,
-            }}
-            className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-xs bg-primary-500 text-white px-2 py-1 rounded whitespace-nowrap"
-          >
-            Contactar por WhatsApp
-          </motion.span>
         </Link>
       </motion.div>
 
@@ -250,6 +248,14 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
           >
             {product.description}
           </motion.p>
+
+          <CustomButton
+            className="bg-primary-500 text-white"
+            onClick={handleAddToCart}
+          >
+            <ShoppingCart className="size-4 mr-2" />
+            Agregar al carrito
+          </CustomButton>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}

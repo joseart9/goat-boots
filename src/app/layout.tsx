@@ -4,6 +4,7 @@ import NavbarSection from "@/app/components/navbar";
 import FooterSection from "./components/footer";
 import BackToTopButton from "./components/backToTop";
 import { Providers } from "@/app/providers";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "GOAT Boots - Botas y Calzado Industrial de Alta Calidad en México",
@@ -72,6 +73,7 @@ export default function RootLayout({
           {children}
           <BackToTopButton />
           <FooterSection />
+          <Toaster richColors position="top-center" />
         </Providers>
       </body>
     </html>
