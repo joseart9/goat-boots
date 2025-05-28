@@ -14,6 +14,7 @@ import { useColors } from "@/app/hooks/use-colors";
 import { CustomButton } from "@/app/admin/components/button";
 import { ShoppingCart } from "lucide-react";
 import { useCart } from "@/app/providers/CartProvider";
+import { toast } from "sonner";
 
 interface ProductShowcaseProps {
   productId: string;
@@ -87,6 +88,7 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
 
   const handleAddToCart = () => {
     addToCart(product);
+    toast.success(`${product.name} se ha agregado al carrito!`);
   };
 
   return (
