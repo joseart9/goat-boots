@@ -15,6 +15,10 @@ export const routes = [
     name: "Contáctanos",
     href: "/contacto",
   },
+  {
+    name: "Carrito",
+    href: "/carrito",
+  },
 ];
 
 export const adminRoutes = [

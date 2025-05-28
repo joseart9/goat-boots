@@ -7,6 +7,7 @@ import { MenuToggle } from "./menu/menu_toggle";
 import { useState, useEffect } from "react";
 import Menu from "./menu";
 import TopBarSection from "@/app/components/topbar";
+import { ShoppingCart } from "lucide-react";
 
 function useMenuAnimation(isOpen: boolean) {
   const [scope, animate] = useAnimate();
@@ -151,10 +152,16 @@ export default function Navbar() {
                 })}
               </div>
 
-              <div className="justify-end">
+              <div className="justify-end flex flex-row space-x-1">
                 <Link href="/catalogo">
                   <button className="bg-[#1A1A1A] px-6 py-3 text-white hover:bg-[#1A1A1A]/85 text-lg hover:scale-110 transition-all duration-300 rounded-md">
                     Catálogo
+                  </button>
+                </Link>
+
+                <Link href="/carrito">
+                  <button className="px-6 py-3 text-white text-lg hover:scale-110 transition-all duration-300 rounded-md">
+                    <ShoppingCart className="size-7 mr-2" />
                   </button>
                 </Link>
               </div>
