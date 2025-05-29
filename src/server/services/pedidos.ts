@@ -17,8 +17,6 @@ export async function getPedidos(): Promise<
               'id', p.id,
               'name', p.name,
               'description', p.description,
-              'category', p.category,
-              'colors', p.colors,
               'corte', p.corte,
               'suela', p.suela,
               'plantilla', p.plantilla,
@@ -29,7 +27,7 @@ export async function getPedidos(): Promise<
               'category_id', p.category_id
             )
           ) as products
-        FROM pedido_products pp
+        FROM "products-pedidos" pp
         JOIN products p ON p.id = pp.product_id
         GROUP BY pp.pedido_id
       )
@@ -55,18 +53,50 @@ export async function getPedidos(): Promise<
   }
 }
 
-export async function getPedido(id: string): Promise<Pedido | null> {
+export async function getPedido(
+  id: string
+): Promise<(Pedido & { products: Product[] }) | null> {
   try {
-    const pedido = await db`SELECT * FROM pedidos WHERE id = ${id}`;
-    return {
-      id: pedido[0].id,
-      active: pedido[0].active,
-      customer_name: pedido[0].customer_name,
-      customer_lastname: pedido[0].customer_lastname,
-      customer_phone: pedido[0].customer_phone,
-      customer_email: pedido[0].customer_email,
-      created_at: pedido[0].created_at,
-    };
+    const pedidos = await db`
+      WITH pedido_products_info AS (
+        SELECT 
+          pp.pedido_id,
+          json_agg(
+            json_build_object(
+              'id', p.id,
+              'name', p.name,
+              'description', p.description,
+              'corte', p.corte,
+              'suela', p.suela,
+              'plantilla', p.plantilla,
+              'forro', p.forro,
+              'corrida', p.corrida,
+              'construccion', p.construccion,
+              'casco', p.casco,
+              'category_id', p.category_id
+            )
+          ) as products
+        FROM "products-pedidos" pp
+        JOIN products p ON p.id = pp.product_id
+        GROUP BY pp.pedido_id
+      )
+      SELECT 
+        p.id, 
+        p.active, 
+        p.customer_name, 
+        p.customer_lastname, 
+        p.customer_phone, 
+        p.customer_email,
+        p.created_at,
+        p.updated_at,
+        COALESCE(ppi.products, '[]'::json) as products
+      FROM pedidos p
+      LEFT JOIN pedido_products_info ppi ON p.id = ppi.pedido_id
+      WHERE p.id = ${id}
+    `;
+
+    if (!pedidos.length) return null;
+    return pedidos[0] as unknown as Pedido & { products: Product[] };
   } catch (error) {
     console.error("Error al obtener el pedido", error);
     return null;
