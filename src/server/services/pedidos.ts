@@ -17,8 +17,6 @@ export async function getPedidos(): Promise<
               'id', p.id,
               'name', p.name,
               'description', p.description,
-              'category', p.category,
-              'colors', p.colors,
               'corte', p.corte,
               'suela', p.suela,
               'plantilla', p.plantilla,
@@ -29,7 +27,7 @@ export async function getPedidos(): Promise<
               'category_id', p.category_id
             )
           ) as products
-        FROM pedido_products pp
+        FROM "products-pedidos" pp
         JOIN products p ON p.id = pp.product_id
         GROUP BY pp.pedido_id
       )

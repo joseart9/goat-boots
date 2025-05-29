@@ -13,18 +13,18 @@ export default async function AdminLayout({
   const cookieStore = cookies();
   const token = (await cookieStore).get("admin_token");
 
-  if (!token) {
-    redirect("/unauthorized");
-  }
+  // if (!token) {
+  //   redirect("/unauthorized");
+  // }
 
   // Realizar la validación del token contra el backend
-  const response = await fetch(`${process.env.BACKEND_URL}/auth/validate`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ token: token.value }),
-  });
+  // const response = await fetch(`${process.env.BACKEND_URL}/auth/validate`, {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify({ token: token.value }),
+  // });
 
   // Si la validación falla, redirige a /unauthorized
   // if (!response.ok) {
