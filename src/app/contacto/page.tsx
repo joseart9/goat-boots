@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { CustomInput as Input } from "@/app/admin/components/input";
 import { useState } from "react";
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import { toast } from "sonner";
 
 export default function Contacto() {
   const [formData, setFormData] = useState({
@@ -12,6 +13,7 @@ export default function Contacto() {
     phone: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -23,10 +25,39 @@ export default function Contacto() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    formData;
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch("/api/send", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Error al enviar el mensaje");
+      }
+
+      toast.success("Mensaje enviado con éxito");
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : "Error al enviar el mensaje"
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -94,7 +125,7 @@ export default function Contacto() {
                         Email
                       </h3>
                       <p className="text-secondary-400 text-xs lg:text-base">
-                        contacto@goatboots.com
+                        ventas@goatboots.mx
                       </p>
                     </div>
                   </motion.div>
@@ -110,10 +141,10 @@ export default function Contacto() {
                     </div>
                     <div>
                       <h3 className="font-medium text-secondary-500 dark:text-white lg:text-base">
-                        Teléfono
+                        WhatsApp
                       </h3>
                       <p className="text-secondary-400 text-xs lg:text-base">
-                        +52 (55) 1234-5678
+                        +52 81 1210 7377
                       </p>
                     </div>
                   </motion.div>
@@ -138,19 +169,6 @@ export default function Contacto() {
                   </motion.div>
                 </div>
               </div>
-
-              {/* Map or Additional Content */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.6 }}
-                className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 shadow-xl border border-white/10 h-64"
-              >
-                {/* Add map or additional content here */}
-                <div className="w-full h-full bg-secondary-500/20 rounded-lg flex items-center justify-center">
-                  <p className="text-secondary-400">Mapa de ubicación</p>
-                </div>
-              </motion.div>
             </motion.div>
 
             {/* Contact Form */}
@@ -240,9 +258,12 @@ export default function Contacto() {
                 >
                   <button
                     type="submit"
-                    className="group relative px-8 py-3 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-all duration-300 shadow-lg hover:shadow-primary-500/25 overflow-hidden"
+                    disabled={isSubmitting}
+                    className="group relative px-8 py-3 bg-primary-500 text-white rounded-lg font-medium hover:bg-primary-600 transition-all duration-300 shadow-lg hover:shadow-primary-500/25 overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <span className="relative z-10">Enviar Mensaje</span>
+                    <span className="relative z-10">
+                      {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
+                    </span>
                     <motion.div
                       className="absolute inset-0 bg-white/20"
                       initial={{ x: "-100%" }}

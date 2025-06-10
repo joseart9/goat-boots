@@ -120,7 +120,7 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
         </div>
 
         <Link
-          href="https://wa.me/1234567890"
+          href={`https://wa.me/8112107377?text=${encodeURIComponent(`Hola! Estoy interesado en saber mas sobre el modelo ${product.name}`)}`}
           target="_blank"
           className="relative group"
           onMouseEnter={() => setIsHovered(true)}
@@ -151,10 +151,11 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                 key={index}
                 src={image.url}
                 alt={product.name}
-                className={`object-contain w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 p-0 ${selectedImage === index
-                  ? "ring-2 ring-primary-500 scale-105"
-                  : "hover:opacity-80 hover:scale-105"
-                  }`}
+                className={`object-contain w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 p-0 ${
+                  selectedImage === index
+                    ? "ring-2 ring-primary-500 scale-105"
+                    : "hover:opacity-80 hover:scale-105"
+                }`}
                 onClick={() => handleThumbnailClick(index)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -188,10 +189,11 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                 key={index}
                 src={image.url}
                 alt={product.name}
-                className={`object-contain w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 m-1 ${selectedImage === index
-                  ? "ring-2 ring-primary-500 scale-105"
-                  : "hover:opacity-80 hover:scale-105"
-                  }`}
+                className={`object-contain w-24 h-24 cursor-pointer rounded-lg transition-all duration-300 m-1 ${
+                  selectedImage === index
+                    ? "ring-2 ring-primary-500 scale-105"
+                    : "hover:opacity-80 hover:scale-105"
+                }`}
                 onClick={() => handleThumbnailClick(index)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -222,8 +224,9 @@ const ProductShowcase = ({ productId, category }: ProductShowcaseProps) => {
                     <div
                       className="w-12 h-12 rounded-full ring-2 ring-white/20 group-hover:ring-primary-500 transition-all duration-300"
                       style={{
-                        background: `linear-gradient(45deg, ${JSON.parse(color.hex as string)[0]
-                          } 50%, ${JSON.parse(color.hex as string)[1]} 50%)`,
+                        background: `linear-gradient(45deg, ${
+                          JSON.parse(color.hex as string)[0]
+                        } 50%, ${JSON.parse(color.hex as string)[1]} 50%)`,
                       }}
                     />
                   ) : (
