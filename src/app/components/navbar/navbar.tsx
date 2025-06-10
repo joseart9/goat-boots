@@ -106,10 +106,12 @@ export default function Navbar() {
                 </div>
               </div>
               <div
-                className="bg-[#1A1A1A] h-32 w-8 relative rounded-br-lg"
+                className="bg-[#1A1A1A] h-32 w-8 relative rounded-br-lg diagonal-clip"
                 style={{
-                  clipPath: "polygon(0 0, 100% 0%, 38% 100%, 0% 100%)",
+                  transform: "translateZ(0)",
+                  willChange: "transform",
                 }}
+                key={pathname}
               />
             </div>
 
