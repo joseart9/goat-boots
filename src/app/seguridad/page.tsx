@@ -300,7 +300,7 @@ export default function Seguridad() {
               En Goat Boots, la seguridad es nuestra prioridad absoluta. Cada
               par de botas está diseñado y fabricado siguiendo los más estrictos
               estándares de la Norma Oficial Mexicana (NOM-113-STPS-2009),
-              garantizando la máxima protección para nuestros trabajadores.
+              garantizando la máxima protección.
             </motion.p>
             <motion.p
               initial={{ opacity: 0, y: 20 }}

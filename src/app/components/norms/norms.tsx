@@ -32,7 +32,7 @@ const certifications = [
   {
     title: "ASTM",
     description:
-      "Nuestro calzado cuenta con certificación ASTM, que respalda su durabilidad y resistencia, garantizando un producto de alta calidad para trabajos pesados y condiciones extremas.",
+      "Nuestro calzado cumple con certificación ASTM, que respalda su durabilidad y resistencia, garantizando un producto de alta calidad para trabajos pesados y condiciones extremas.",
     img: "/astm.png",
     imgAlt: "Certificación ASTM que avala la resistencia del calzado",
     benefits: [

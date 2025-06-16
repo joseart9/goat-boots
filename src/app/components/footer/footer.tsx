@@ -39,7 +39,7 @@ const contactInfo = [
   },
   {
     icon: FaPhone,
-    text: "+52 (477) 123-4567",
+    text: "+52 (81) 1210-7377",
   },
   {
     icon: FaEnvelope,
@@ -77,9 +77,8 @@ export default function FooterSection() {
     <footer
       className="relative pt-16 pb-8 px-4 overflow-hidden"
       style={{
-        backgroundImage: `${
-          isDarkMode ? "url('/textura1.png')" : "url('/textura2.png')"
-        }`,
+        backgroundImage: `${isDarkMode ? "url('/textura1.png')" : "url('/textura2.png')"
+          }`,
       }}
     >
       <div className="container mx-auto relative">
@@ -93,7 +92,7 @@ export default function FooterSection() {
             <img
               src="/logo2.png"
               alt="logo"
-              className="h-24 w-auto cursor-pointer hover:scale-105 transition-transform duration-300"
+              className="md:h-16 xl:h-24 w-auto cursor-pointer hover:scale-105 transition-transform duration-300"
               onClick={() => router.push("/")}
             />
             <p className="mt-4 text-secondary-400 text-sm max-w-xs text-center lg:text-left">
